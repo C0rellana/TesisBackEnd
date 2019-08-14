@@ -19,6 +19,10 @@ module.exports = (sequelize, DataTypes) => {
         msg: 'Este rut ya existe'
       },
     },
+    role: {
+      type: DataTypes.STRING,
+      defaultValue: "User"
+    },
     correo: {
       type: DataTypes.STRING,
       allowNull: {

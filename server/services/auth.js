@@ -1,5 +1,5 @@
 import model from '../models';
-const { Usuario } = model;
+const { Usuario, Carrera } = model;
 
 const CustomError = require('./customError');
 const config =  require('./config');
@@ -29,10 +29,11 @@ const authenticate = params => {
 			expiresIn: config.tokenExpireTime
 		});
 
-		return token;
+		return {token: token,nombre: Usuario.nombre,role:Usuario.role, carrera: Usuario.cod_carrera};
 	});
 }
 
 module.exports = {
 	authenticate
 }
+

@@ -10,10 +10,10 @@ const getUserByLogin = correo => Usuarios.findOne({where: {correo}});
 
 function login(req, res){
 	return authService.authenticate(req.body)
-	.then(token => {
+	.then(data => {
 		res.send({
 			success: true,
-			data: { token }
+			data
 		});
 	})
 	.catch(err => {

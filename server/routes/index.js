@@ -10,7 +10,7 @@ export default (app) => {
   app.post('/register', authController.register);
   
 
-  app.post('/carreras',authMiddleware.checkAuth,Carreras.Crear); 
+  app.post('/carreras',Carreras.Crear); 
   app.get('/carreras',authMiddleware.checkAuth,Carreras.List); 
 
 };
