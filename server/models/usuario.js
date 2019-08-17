@@ -15,6 +15,7 @@ module.exports = (sequelize, DataTypes) => {
         msg: 'Debes completar este campo'
       },
       unique: {
+        name:"user",
         args: true,
         msg: 'Este rut ya existe'
       },
@@ -73,6 +74,13 @@ module.exports = (sequelize, DataTypes) => {
     Usuario.belongsTo(models.Carrera, {
       foreignKey: {name: 'cod_carrera', allowNull:false},
       onDelete: 'CASCADE'
+    });
+    
+    Usuario.belongsToMany(models.Archivo, {
+      through: 'Denuncias',
+      as: 'UsuarioDenuncias',
+      foreignKey: 'cod_usuario',
+      otherKey:'cod_archivo',
     });
 
   };

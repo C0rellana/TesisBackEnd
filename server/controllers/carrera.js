@@ -1,6 +1,7 @@
 import model from '../models';
 
-const { Carrera } = model;
+const resp = require('./response');
+const { Carrera ,Ramo } = model;
 
 class Carreras {
   static Crear(req, res) {
@@ -21,6 +22,21 @@ class Carreras {
     return Carrera
       .findAll()
       .then(Carrera => res.status(200).send(Carrera));
+  }
+
+  static CarreraRamos(req, res) {
+    return Carrera
+      .findAll({
+        attributes: [['id', 'value'], ['nombre', 'label'],'sigla'],
+        include: [{
+          model: Ramo,
+          required: false,
+          attributes: [['id', 'value'], ['nombre', 'label'],'codigo'],
+        }]
+      })
+      .then(
+        data => res.status(200).send(data));
+
   }
 }
 

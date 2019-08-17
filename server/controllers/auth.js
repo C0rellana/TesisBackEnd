@@ -2,48 +2,40 @@ const config =  require('../services/config');
 const bcrypt = require('bcrypt');
 const authService = require('../services/auth');
 const Usuarios = require('../models').Usuario;
-
+const resp = require('./response');
+const Op = require('sequelize').Op;
 
 const addUser = user => Usuarios.create(user);
-const getUserByLogin = correo => Usuarios.findOne({where: {correo}});
+
 
 
 function login(req, res){
 	return authService.authenticate(req.body)
 	.then(data => {
-		res.send({
-			success: true,
-			data
-		});
+		return	resp.Success(res,"Ha iniciado session correctamente",data)
 	})
 	.catch(err => {
 		if (err.type === 'custom'){
-			return res.send({
-				success: false,
-				message: err.message
-			});
+			return resp.Error(res,err.message)
 		}
-		return res.send({
-			success: false,
-			message: 'Error al iniciar sesión. Error desconocido.'
-		});
+		return resp.Error(res,'Error al iniciar sesión. Error desconocido.')
 	})
 };
+
+
 
 function register(req, res){
 
 	const { nombre, correo, rut,password,cod_carrera} = req.body
 
-	return getUserByLogin(req.body.correo || '')
+	return Usuarios.findOne({  where: {
+		[Op.or]: [{correo: correo}, {rut: rut}]
+	  }})
+	
 	.then(exists => {
-
 		if (exists){
-			return res.send({
-				success: false,
-				message: 'Registro fallido. El correo ingresado ya existe.'
-			});
+			return resp.Error(res,'Registro fallido. El correo/rut ingresado ya existe.')
 		}
-
 		var user = {
 			nombre,
             correo,
@@ -53,10 +45,13 @@ function register(req, res){
 		}
 
 		return addUser(user)
-		.then(() => res.send({success: true}));
-	});
-};
+		.then(() => resp.Success(res,"Se ha registrado correctamente."))
+		.catch(() => resp.Error(res,"No se ha podido completar el resgistro. Revise los campos"));
 
+	})
+	.catch((e) =>console.log(e));
+	
+};
 
 
 module.exports = {

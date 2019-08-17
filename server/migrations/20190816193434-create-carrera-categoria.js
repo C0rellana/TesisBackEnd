@@ -1,28 +1,12 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('Usuarios', {
+    return queryInterface.createTable('CarreraCategoria', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
-      },
-      nombre: {
-        type: Sequelize.STRING
-      },
-      rut: {
-        type: Sequelize.STRING,
-      },
-      correo: {
-        type: Sequelize.STRING,
-        unique:true,
-      },
-      role: {
-        type: Sequelize.STRING,
-      },
-      password: {
-        type: Sequelize.STRING
       },
       cod_carrera: {
         type: Sequelize.INTEGER,
@@ -32,7 +16,16 @@ module.exports = {
           key: 'id',
           as: 'cod_carrera',
         }
-      },      
+      },
+      cod_categoria: {
+        type: Sequelize.INTEGER,
+        onDelete: 'CASCADE',
+        references: {
+          model: 'Categoria',
+          key: 'id',
+          as: 'cod_categoria',
+        }
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
@@ -44,6 +37,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('Usuarios');
+    return queryInterface.dropTable('CarreraCategoria');
   }
 };
