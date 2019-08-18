@@ -7,6 +7,10 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon --exec babel-node app.js"
   },
+  "engines": {
+    "node": "10.16.2",
+    "npm": "6.7.0"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Carloxmof1/BackEnd.git"
@@ -27,7 +31,7 @@
     "babel-core": "^6.26.3",
     "bcrypt": "^3.0.6",
     "body-parser": "^1.19.0",
-    "connect-multiparty": "^2.2.0",
+    "dotenv": "^8.0.0",
     "dropbox": "^4.0.30",
     "es6-promise": "^4.2.8",
     "express": "^4.17.1",

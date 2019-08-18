@@ -17,14 +17,14 @@ class Archivos {
             var extension= path.extname(file.originalname);
             var filename = path.basename(file.originalname,extension);
             var enlace= filename + Date.now() +extension;
-
+            
             var archivo = {
-                nombre:filename,
+                nombre:filename.charAt(0).toUpperCase() + filename.slice(1).toLowerCase(),
                 enlace:enlace,
                 cod_ramo,
                 cod_usuario,
                 año: new Date().getFullYear(),
-                formato:extension,
+                formato:extension.substring(1).toUpperCase(),
                 valoracion:0,
                 cod_categoria,
                 descripcion,
