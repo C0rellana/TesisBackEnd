@@ -1,5 +1,5 @@
 import model from '../models';
-const { Ramo } = model;
+const { Ramo,Usuario } = model;
 
 
 class Ramos {
@@ -9,14 +9,16 @@ class Ramos {
         .findAll()
         .then(Ramos => res.status(200).send(Ramos));
     }
+
     static RamosbyCarrera(req, res) {
-        const cod_carrera =  req.params.id;
-        return Ramo
-        .findAll({
-            attributes: [['id', 'value'], ['nombre', 'label']],
-            where: {cod_carrera}})
-        .then(Ramos => res.status(200).send(Ramos));
-    }
+        return Usuario.findOne({where:{id:req.user.id}}).then(usuario=>{
+            return Ramo
+            .findAll({
+                attributes: [['id', 'value'], ['nombre', 'label']],
+                where: {cod_carrera:usuario.cod_carrera}})
+            .then(Ramos => res.status(200).send(Ramos));
+        });
+     }
 }
 
 export default Ramos;

@@ -2,7 +2,8 @@ const jwt = require('jsonwebtoken');
 const config =  require('../services/config');
 
 const checkAuth = (req, res, next) => {
-	var token = req.headers['token'];
+	//console.log(req.headers)
+	var token = req.headers['authorization'];
 	if (!token)
 		return res.status(403).send({ auth: false, message: 'Error. Debe iniciar sesión' });
 

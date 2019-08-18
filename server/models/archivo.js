@@ -8,8 +8,23 @@ module.exports = (sequelize, DataTypes) => {
         msg: 'Debes completar este campo'
       }
     },
-    codigo: {
+    enlace: {
       type: DataTypes.STRING,
+    },
+    descripcion: {
+      type: DataTypes.STRING,
+    },
+    año: {
+      type: DataTypes.INTEGER,
+    },
+    formato: {
+      type: DataTypes.STRING,
+    },
+    valoracion: {
+      type: DataTypes.INTEGER,
+    },
+    status: {
+      type: DataTypes.BOOLEAN,
     },
     cod_ramo: {
       type: DataTypes.INTEGER,

@@ -22,6 +22,18 @@ function login(req, res){
 	})
 };
 
+function GetData(req, res){
+	const id = req.user.id;
+	return Usuarios.findOne({ 
+		attributes: ['id','cod_carrera','role','nombre'],
+		where: {id: id}
+	})
+	.then(usuario => res.status(200).send(usuario));
+	
+
+
+};
+
 
 
 function register(req, res){
@@ -56,5 +68,6 @@ function register(req, res){
 
 module.exports = {
 	login,
-	register
+	register,
+	GetData
 }

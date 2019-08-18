@@ -15,7 +15,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       año: {
-        type: Sequelize.DATE
+        type: Sequelize.INTEGER
       },
       formato: {
         type: Sequelize.STRING

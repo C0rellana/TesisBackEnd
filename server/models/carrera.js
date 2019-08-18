@@ -17,6 +17,13 @@ module.exports = (sequelize, DataTypes) => {
         msg: 'Debes completar este campo'
       }
     },
+    token: {
+      type: DataTypes.JSON,
+      allowNull: {
+        args: false,
+        msg: 'Debes completar este campo'
+      }
+    },
   }, {});
   Carrera.associate = function(models) {
     // associations can be defined here

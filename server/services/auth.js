@@ -29,7 +29,7 @@ const authenticate = params => {
 			expiresIn: config.tokenExpireTime
 		});
 
-		return {token: token,id:Usuario.id,nombre: Usuario.nombre,role:Usuario.role, carrera: Usuario.cod_carrera};
+		return {token:token, role:Usuario.role};
 	});
 }
 

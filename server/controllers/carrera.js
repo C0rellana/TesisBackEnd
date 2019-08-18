@@ -19,6 +19,7 @@ class Carreras {
         .catch(error => res.status(400).send(error));
     }
   static List(req, res) {
+   // console.log(req.user.id)
     return Carrera
       .findAll()
       .then(Carrera => res.status(200).send(Carrera));
