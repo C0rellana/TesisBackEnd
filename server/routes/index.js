@@ -33,5 +33,9 @@ export default (app) => {
   app.post('/archivos',upload.any(),authMiddleware.checkAuth, Archivos.Subir);
   app.get('/archivos',authMiddleware.checkAuth, Archivos.GetAll);
   app.post('/GetArchivo',authMiddleware.checkAuth,Archivos.GetArchivo);
+  app.post('/ValorarArchivo',authMiddleware.checkAuth, Archivos.ValorarArchivo);
+
+  app.post('/FilterArchivos',authMiddleware.checkAuth, Archivos.FilterArchivos);
 
 };
+

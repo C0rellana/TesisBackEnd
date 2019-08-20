@@ -1,6 +1,6 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-  const Ramo = sequelize.define('Ramo', {
+  const Contenido = sequelize.define('Contenido', {
     nombre: {
       type: DataTypes.STRING,
       allowNull: {
@@ -8,34 +8,32 @@ module.exports = (sequelize, DataTypes) => {
         msg: 'Debes completar este campo'
       }
     },
-    codigo: {
-      type: DataTypes.STRING,
-    },
-    cod_carrera: {
+    cod_ramo: {
       type: DataTypes.INTEGER,
       allowNull: {
         args: false,
         msg: 'Debes completar este campo'
       },
       references: {
-        model: 'Carrera',
+        model: 'Ramo',
         key: 'id',
-        as: 'cod_carrera',
+        as: 'cod_ramo',
       },
     },
 
   }, {});
-  Ramo.associate = function(models) {
+  Contenido.associate = function(models) {
     // associations can be defined here
-    Ramo.belongsTo(models.Carrera, {
-      foreignKey: {name: 'cod_carrera', allowNull:false},
+    Contenido.belongsTo(models.Ramo, {
+      foreignKey: {name: 'cod_ramo', allowNull:false},
       onDelete: 'CASCADE'
     });
 
-    Ramo.hasMany(models.Contenido, {
-      foreignKey:  {name: 'cod_ramo', allowNull:false},
-    });
+    Contenido.hasMany(models.Archivo, {
+        foreignKey:  {name: 'cod_contenido', allowNull:false},
+      });
+    
 
   };
-  return Ramo;
+  return Contenido;
 };

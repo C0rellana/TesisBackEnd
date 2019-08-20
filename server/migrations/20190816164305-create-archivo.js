@@ -21,12 +21,15 @@ module.exports = {
         type: Sequelize.STRING
       },
       valoracion: {
-        type: Sequelize.INTEGER
+        type: Sequelize.FLOAT
       },
       descripcion: {
         type: Sequelize.STRING
       },
       status: {
+        type: Sequelize.BOOLEAN
+      },
+      isEnlace: {
         type: Sequelize.BOOLEAN
       },
       cod_usuario: {
@@ -38,13 +41,13 @@ module.exports = {
           as: 'autor',
         }
       }, 
-      cod_ramo: {
+      cod_contenido: {
         type: Sequelize.INTEGER,
         onDelete: 'CASCADE',
         references: {
-          model: 'Ramos',
+          model: 'Contenidos',
           key: 'id',
-          as: 'cod_ramo',
+          as: 'cod_contenido',
         }
       }, 
       cod_categoria: {

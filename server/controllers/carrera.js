@@ -1,7 +1,7 @@
 import model from '../models';
 
 const resp = require('./response');
-const { Carrera ,Ramo } = model;
+const { Carrera ,Ramo,Contenido } = model;
 
 class Carreras {
   static Crear(req, res) {
@@ -33,6 +33,11 @@ class Carreras {
           model: Ramo,
           required: false,
           attributes: [['id', 'value'], ['nombre', 'label'],'codigo'],
+          include: [{
+            model: Contenido,
+            required: false,
+            attributes: [['id', 'value'], ['nombre', 'label']],
+          }]
         }]
       })
       .then(

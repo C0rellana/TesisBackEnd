@@ -8,7 +8,10 @@ class Categorias {
        return Usuario.findOne({where:{id:req.user.id}}).then(usuario=>{
             return Categoria
             .findAll({
-                attributes: [['id', 'value'], ['nombre', 'label'],'icon'],
+                attributes: [['id', 'value'], ['nombre', 'label'],'icon','color'],
+                order: [
+                    ['nombre', 'ASC'],
+                ],
                 include: [{model:Carrera, as:'CategoriaCarreras',attributes: [], where:{id:usuario.cod_carrera}}]
             })
             .then(Categorias => res.status(200).send(Categorias));

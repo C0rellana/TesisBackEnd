@@ -2,46 +2,40 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.bulkInsert('Ramos', [
+    await queryInterface.bulkInsert('Contenidos', [
       {
-        nombre: 'Inteligencia Artificial',
-        codigo: 'ICI560-1',
-        cod_carrera:1,
+        nombre: 'Contenido 1 RAMO 1 ICI',
+        cod_ramo:1,
         createdAt : new Date(),
         updatedAt : new Date(),
       },
       {
-        nombre: 'Metodos Formales',
-        codigo: 'ICI560-2',
-        cod_carrera:1,
+        nombre: 'Contenido 2 RAMO 1 ICI',
+        cod_ramo:1,
         createdAt : new Date(),
         updatedAt : new Date(),
       },
       {
-        nombre: 'RAMO DE ICO 1',
-        codigo: 'ICO560-1',
-        cod_carrera:2,
+        nombre: 'Contenido 1 RAMO 2 ICI',
+        cod_ramo:2,
         createdAt : new Date(),
         updatedAt : new Date(),
       },
       {
-        nombre: 'RAMO DE ICO 2',
-        codigo: 'ICO560-2',
-        cod_carrera:2,
+        nombre: 'Contenido 1 RAMO 1 ICO',
+        cod_ramo:3,
         createdAt : new Date(),
         updatedAt : new Date(),
       },
       {
-        nombre: 'RAMO DE MEDICINA 1',
-        codigo: 'MED560-1',
-        cod_carrera:3,
+        nombre: 'Contenido 2 RAMO 1 ICO',
+        cod_ramo:3,
         createdAt : new Date(),
         updatedAt : new Date(),
       },
       {
-        nombre: 'RAMO DE MEDICINA 2',
-        codigo: 'MED560-2',
-        cod_carrera:3,
+        nombre: 'Contenido 1 RAMO 1 MEDICINA',
+        cod_ramo:5,
         createdAt : new Date(),
         updatedAt : new Date(),
       },
@@ -49,6 +43,6 @@ module.exports = {
   },
 
   down: async(queryInterface, Sequelize) => {
-    await queryInterface.bulkDelete('Ramos', null, {});
+    await queryInterface.bulkDelete('Contenidos', null, {});
   }
 };

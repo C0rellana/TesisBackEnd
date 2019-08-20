@@ -3,10 +3,7 @@ module.exports = (sequelize, DataTypes) => {
   const Archivo = sequelize.define('Archivo', {
     nombre: {
       type: DataTypes.STRING,
-      allowNull: {
-        args: false,
-        msg: 'Debes completar este campo'
-      }
+
     },
     enlace: {
       type: DataTypes.STRING,
@@ -21,28 +18,29 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
     },
     valoracion: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.FLOAT,
     },
     status: {
       type: DataTypes.BOOLEAN,
     },
-    cod_ramo: {
+    isEnlace: {
+      type: DataTypes.BOOLEAN,
+    },
+    cod_contenido: {
       type: DataTypes.INTEGER,
       allowNull: {
         args: false,
-        msg: 'Debes completar este campo'
       },
       references: {
-        model: 'Ramo',
+        model: 'Contenido',
         key: 'id',
-        as: 'cod_ramo',
+        as: 'cod_contenido',
       },
     },
     cod_usuario: {
       type: DataTypes.INTEGER,
       allowNull: {
         args: false,
-        msg: 'Debes completar este campo'
       },
       references: {
         model: 'Usuario',
@@ -66,8 +64,8 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   Archivo.associate = function(models) {
     // associations can be defined here
-    Archivo.belongsTo(models.Ramo, {
-      foreignKey: {name: 'cod_ramo', allowNull:false},
+    Archivo.belongsTo(models.Contenido, {
+      foreignKey: {name: 'cod_contenido', allowNull:false},
       onDelete: 'CASCADE'
     });
     

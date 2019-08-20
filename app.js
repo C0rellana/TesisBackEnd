@@ -4,8 +4,8 @@ import logger from 'morgan';
 import bodyParser from 'body-parser';
 import routes from './server/routes';
 
-const hostname = process.env.HOST;
-const port = process.env.PORT;
+const hostname = 'localhost';
+const port = 5000;
 const app = express()
 const server = http.createServer(app);
 
