@@ -6,10 +6,56 @@ const Dropbox = require('../services/Dropbox');
 const TOKEN = 'iBumdY95utkAAAAAAAAA-sl12H42Sl7_bXiZTTtNjNx5zZmmCigSMLt7JgPojSkF';
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
+
+async function GetPath(cod_usuario,cod_contenido,cod_categoria,filename,extension){
+     //obtener el nombre de la carrera
+    const user = await Usuario.findAll({
+        where:{id:cod_usuario},
+        attributes: [],
+        include:[
+            {
+                model: Carrera,
+                required: true,
+                attributes: ['nombre']
+            }, 
+        ]
+    })
+    .map(el => el.get({ plain: true }))
+
+    //obtener el nombre del ramo y contenido
+    const ramo = await Contenido.findAll({
+        where:{id:cod_contenido},
+        attributes: ['nombre'],
+        include:[
+            {
+                model: Ramo,
+                required: true,
+                attributes: ['nombre']
+            }, 
+        ]
+    })
+    .map(el => el.get({ plain: true }))
+
+    const categoria = await Categoria.findAll({
+        where:{id:cod_categoria},
+        attributes: ['nombre'],
+    })
+    .map(el => el.get({ plain: true }))
+
+    var nombre_carrera=user[0].Carrera.nombre;
+    var nombre_ramo= ramo[0].Ramo.nombre;
+    var nombre_contenido= ramo[0].nombre;
+    var nombre_categoria =categoria[0].nombre;
+
+    return nombre_carrera+'/'+nombre_ramo+'/'+nombre_contenido+'/'+nombre_categoria+'/'+filename+ Date.now()+extension ;
+
+
+}
+
 class Archivos {
 
     static async Subir(req, res) {
-   
+
         const { cod_categoria,descripcion,cod_contenido,enlace} = req.body
         var cod_usuario=req.user.id;
         let responses = [];
@@ -38,12 +84,13 @@ class Archivos {
             }
         }
         else{
+
             for (let i = 0; i < req.files.length; i++) {
-               
+
                 var file = req.files[i];
                 var extension= path.extname(file.originalname);
                 var filename = path.basename(file.originalname,extension);
-                var url= filename + Date.now() +extension;
+                var url= await GetPath(cod_usuario,cod_contenido,cod_categoria,filename,extension);
                 
                 var archivo = {
                     nombre:filename.charAt(0).toUpperCase() + filename.slice(1).toLowerCase(),
@@ -117,8 +164,12 @@ class Archivos {
 
 
     static async GetArchivo(req, res) {
-       const url = await Dropbox.GetFile(TOKEN, req.body.nombre);
-        res.send(url);        
+       await Dropbox.GetFile(TOKEN, req.body.nombre).then(data=>{
+        res.send({url:data.link,success:true});  
+       }).catch(()=>{
+        res.send({message:"Contenido no encontrado",success:false});  
+       });
+             
     }
 
 
@@ -252,7 +303,7 @@ class Archivos {
             res.status(200).send(data)
           }
           );    
-     }
+    }
 
 
     static ValorarArchivo(req, res) {
@@ -266,8 +317,9 @@ class Archivos {
            return res.status(200).send({status: false, message:"Valoración enviada"}) 
         })     
             
-     }
-     static DenunciarArchivo(req, res) {
+    }
+    
+    static DenunciarArchivo(req, res) {
         const {descripcion, archivo,tipo} = req.body;
 
         var denuncia = {
@@ -287,7 +339,7 @@ class Archivos {
            return res.status(200).send({status: false, message:"Denuncia enviada"}) 
         })     
             
-     }
+    }
 }
 
 module.exports = Archivos

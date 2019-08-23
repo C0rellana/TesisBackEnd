@@ -1,7 +1,7 @@
 const model = require('../models')
 
 const resp = require('./response');
-const { Carrera ,Ramo,Contenido } = model;
+const { Carrera ,Ramo,Contenido,Usuario } = model;
 
 class Carreras {
   static Crear(req, res) {
@@ -25,6 +25,21 @@ class Carreras {
       .then(Carrera => res.status(200).send(Carrera));
   }
 
+  static ApiGetCarrera(req, res) {
+     return Carrera
+       .findOne({
+        attributes: [['id', 'value'], ['nombre', 'label']],
+         include:[
+           {
+             model:Usuario,
+             attributes: [],
+             where:{id: req.user.id}
+           },         
+          ]
+       })
+       .then(Carrera => res.status(200).send(Carrera));
+   }
+  
   static CarreraRamos(req, res) {
     return Carrera
       .findAll({

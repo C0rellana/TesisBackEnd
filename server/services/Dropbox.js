@@ -14,16 +14,16 @@ function DropboxList(TOKEN){
 
 }
 
-function DropboxUpload(TOKEN,nombre,file){
+async function DropboxUpload(TOKEN,nombre,file){
     var dbx = new Dropbox({ accessToken: TOKEN, fetch: fetch });
     
-    return dbx.filesUpload({path: '/' + nombre, contents: file})
-    .then(function(response) {
+    try {
+        const response = await dbx.filesUpload({ path: '/' + nombre, contents: file });
         return true;
-    })
-    .catch(function(error) {
+    }
+    catch (error) {
         return false;
-    });
+    }
 }
 
 var GetFile = function(token,nombre) {
@@ -32,7 +32,7 @@ var GetFile = function(token,nombre) {
         
             dbx.filesGetTemporaryLink({path:"/"+nombre})
             .then(function(response) {
-                resolve(response.link);
+                resolve(response);
             })
             .catch(function(error) {
                 reject(Error(error))

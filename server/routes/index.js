@@ -19,6 +19,7 @@ module.exports=(app) => {
 
   /*Rutas para obtener datos de carreras*/
   app.get('/carreras',authMiddleware.checkAuth,Carrera.List); 
+  app.get('/ApiGetCarrera',authMiddleware.checkAuth,Carrera.ApiGetCarrera); 
   app.get('/carrerasramos',authMiddleware.checkAuth,Carrera.CarreraRamos); 
   
   /*Rutas para obtener datos de ramos*/
