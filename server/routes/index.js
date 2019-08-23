@@ -1,8 +1,8 @@
 
-import Carrera from '../controllers/carrera';
-import Ramo from '../controllers/ramo';
-import Categoria from '../controllers/categoria';
-import Archivos from '../controllers/archivos';
+const Carrera = require('../controllers/carrera');
+const Ramo = require('../controllers/ramo');
+const Categoria = require('../controllers/categoria');
+const Archivos = require('../controllers/archivos');
 
 const authController = require('../controllers/auth');
 const authMiddleware = require('../middlewares/auth');
@@ -10,7 +10,7 @@ const authMiddleware = require('../middlewares/auth');
 var multer  = require('multer')
 var upload = multer();
 
-export default (app) => {
+module.exports=(app) => {
 
   app.post('/login', authController.login);
   app.post('/register', authController.register);
@@ -34,7 +34,7 @@ export default (app) => {
   app.get('/archivos',authMiddleware.checkAuth, Archivos.GetAll);
   app.post('/GetArchivo',authMiddleware.checkAuth,Archivos.GetArchivo);
   app.post('/ValorarArchivo',authMiddleware.checkAuth, Archivos.ValorarArchivo);
-
+  app.post('/DenunciarArchivo',authMiddleware.checkAuth, Archivos.DenunciarArchivo);
   app.post('/FilterArchivos',authMiddleware.checkAuth, Archivos.FilterArchivos);
 
 };

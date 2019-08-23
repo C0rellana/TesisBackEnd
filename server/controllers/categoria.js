@@ -1,4 +1,4 @@
-import model from '../models';
+const model = require('../models')
 const { Categoria,Usuario,Carrera} = model;
 
 
@@ -19,4 +19,4 @@ class Categorias {
     }
 }
 
-export default Categorias;
+module.exports = Categorias;

@@ -4,12 +4,12 @@ var Dropbox = require('dropbox').Dropbox;
 function DropboxList(TOKEN){
 
     var dbx = new Dropbox({ accessToken: TOKEN, fetch: fetch });
-    dbx.filesListFolder({path: ''})
+    return dbx.filesListFolder({path: ''})
     .then(function(response) {
-        console.log(response);
+        return true;
     })
     .catch(function(error) {
-        console.log(error);
+        return false;
   });
 
 }
@@ -17,7 +17,7 @@ function DropboxList(TOKEN){
 function DropboxUpload(TOKEN,nombre,file){
     var dbx = new Dropbox({ accessToken: TOKEN, fetch: fetch });
     
-    dbx.filesUpload({path: '/' + nombre, contents: file})
+    return dbx.filesUpload({path: '/' + nombre, contents: file})
     .then(function(response) {
         return true;
     })

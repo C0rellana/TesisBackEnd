@@ -18,7 +18,7 @@ function login(req, res){
 		if (err.type === 'custom'){
 			return resp.Error(res,err.message)
 		}
-		return resp.Error(res,'Error al iniciar sesión. Error desconocido.')
+		return resp.Error(res,'Oops... Error desconocido.')
 	})
 };
 
@@ -46,7 +46,7 @@ function register(req, res){
 	
 	.then(exists => {
 		if (exists){
-			return resp.Error(res,'Registro fallido. El correo/rut ingresado ya existe.')
+			return resp.Error(res,'Oops... El usuario ya existe')
 		}
 		var user = {
 			nombre,
@@ -58,7 +58,7 @@ function register(req, res){
 
 		return addUser(user)
 		.then(() => resp.Success(res,"Se ha registrado correctamente."))
-		.catch(() => resp.Error(res,"No se ha podido completar el resgistro. Revise los campos"));
+		.catch(() => resp.Error(res,"Oops... Revise los datos otorgados"));
 
 	})
 	.catch((e) =>console.log(e));

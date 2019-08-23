@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('Denuncias', {
+    return queryInterface.createTable('Denuncia', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -29,6 +29,15 @@ module.exports = {
           as: 'cod_usuario',
         }
       },    
+      cod_tipodenuncia: {
+        type: Sequelize.INTEGER,
+        onDelete: 'CASCADE',
+        references: {
+          model: 'Tipodenuncia',
+          key: 'id',
+          as: 'cod_tipodenuncia',
+        }
+      },    
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
@@ -40,6 +49,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('Denuncias');
+    return queryInterface.dropTable('Denuncia');
   }
 };

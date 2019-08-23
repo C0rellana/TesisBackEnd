@@ -1,4 +1,4 @@
-import model from '../models';
+const model = require('../models')
 const { Ramo,Usuario,Contenido } = model;
 
 
@@ -28,4 +28,4 @@ class Ramos {
      }
 }
 
-export default Ramos;
+module.exports = Ramos

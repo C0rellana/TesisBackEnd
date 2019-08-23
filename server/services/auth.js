@@ -1,6 +1,5 @@
-import model from '../models';
+const model =require('../models');
 const { Usuario, Carrera } = model;
-
 const CustomError = require('./customError');
 const config =  require('./config');
 const bcrypt = require('bcrypt');
@@ -14,10 +13,10 @@ const authenticate = params => {
 		raw: true
 	}).then(Usuario => {
 		if (!Usuario)
-			throw new CustomError('Error al iniciar sesión. Usuario invalido.');
+			throw new CustomError('Oops... Usuario invalido.');
 
 		if (!bcrypt.compareSync(params.password || '', Usuario.password))
-			throw new CustomError('Error al iniciar sesión. Contraseña invalida.');
+			throw new CustomError('Oops... Usuario invalido.');
 
 		const payload = {
 			correo: Usuario.correo,
@@ -29,7 +28,7 @@ const authenticate = params => {
 			expiresIn: config.tokenExpireTime
 		});
 
-		return {token:token, role:Usuario.role};
+		return {token};
 	});
 }
 

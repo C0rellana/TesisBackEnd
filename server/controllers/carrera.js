@@ -1,4 +1,4 @@
-import model from '../models';
+const model = require('../models')
 
 const resp = require('./response');
 const { Carrera ,Ramo,Contenido } = model;
@@ -46,4 +46,4 @@ class Carreras {
   }
 }
 
-export default Carreras;
+module.exports = Carreras

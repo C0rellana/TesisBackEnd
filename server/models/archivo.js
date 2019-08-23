@@ -74,11 +74,8 @@ module.exports = (sequelize, DataTypes) => {
       onDelete: 'CASCADE'
     });
 
-    Archivo.belongsToMany(models.Usuario, {
-      through: 'Denuncia',
-      as: 'ArchivoDenuncias',
-      foreignKey:'cod_archivo',
-      otherKey:'cod_usuario',
+    Archivo.hasMany(models.Denuncia, {
+      foreignKey:  {name: 'cod_archivo', allowNull:false},
     });
 
     Archivo.belongsTo(models.Categoria, {

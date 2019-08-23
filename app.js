@@ -1,10 +1,10 @@
-import http from 'http';
-import express from 'express';
-import logger from 'morgan';
-import bodyParser from 'body-parser';
-import routes from './server/routes';
+const http = require('http')
+const logger = require('morgan')
+const bodyParser = require('body-parser')
+const express = require('express')
+const routes = require('./server/routes')
 
-const hostname = 'localhost';
+const hostname = '192.168.18.37';
 const port = 5000;
 const app = express()
 const server = http.createServer(app);

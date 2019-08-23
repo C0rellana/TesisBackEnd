@@ -1,18 +1,19 @@
-import model from '../models';
-const { Archivo,Ramo,Usuario,Categoria,Contenido,Carrera} = model;
+const model = require('../models')
+
+const { Archivo,Ramo,Usuario,Categoria,Contenido,Carrera,Denuncia} = model;
 var path = require('path')
 const Dropbox = require('../services/Dropbox');
 const TOKEN = 'iBumdY95utkAAAAAAAAA-sl12H42Sl7_bXiZTTtNjNx5zZmmCigSMLt7JgPojSkF';
 const Sequelize = require('sequelize');
+const Op = Sequelize.Op;
 class Archivos {
 
-    static Subir(req, res) {
-
+    static async Subir(req, res) {
+   
         const { cod_categoria,descripcion,cod_contenido,enlace} = req.body
         var cod_usuario=req.user.id;
-
-        //si la entrada son enlaces:    
-        
+        let responses = [];
+        //si la entrada son enlaces:          
         if(enlace==='true'){
             var enlaces=JSON.parse(req.body.enlaces)
             for (let i = 0; i < enlaces.length; i++) {
@@ -29,9 +30,12 @@ class Archivos {
                     status: true,
                     isEnlace:true,
                 } 
-                Archivo.create(archivo);
+                var IsSaved  = await Archivo.create(archivo)
+                    .then(()=>{return true})
+                    .catch(()=>{return false})
+                if(IsSaved){responses.push(false)}
+                else{responses.push(false)}
             }
-            res.status(200).send({message:"Enlaces subidos"});
         }
         else{
             for (let i = 0; i < req.files.length; i++) {
@@ -54,18 +58,31 @@ class Archivos {
                     status: true,
                     isEnlace:false,
                 }
-                Dropbox.DropboxUpload(TOKEN,url,file.buffer);
-                Archivo.create(archivo);
+                var IsUpload= await Dropbox.DropboxUpload(TOKEN,url,file.buffer);
+                if(IsUpload){
+                    var IsSaved  = await Archivo.create(archivo)
+                        .then(()=>{return true})
+                        .catch(()=>{return false})
+                  
+                    if(IsSaved){responses.push(true)}
+                    else{responses.push(false)}
+                }
+                else{responses.push(false)}
             }  
-            res.status(200).send({message:"Archivos subidos"});
         }
+        
+      
+        res.send(responses)
+        
+        
+
     }
 
     static GetAll(req, res) {
 
           return Archivo
           .findAll({
-            limit: 15,
+            limit: 100,
             order: [
                 ['valoracion', 'DESC'],
               ],
@@ -106,13 +123,14 @@ class Archivos {
 
 
     static async FilterArchivos(req, res) {
-        const {carreras , ramos, contenidos} = req.body;
+        const {carreras,ramos,contenidos,busqueda} = req.body;
+        console.log(carreras , ramos, contenidos,busqueda)
 
-       var Filtro= {};
+       var FiltroCRC= {};
         if(carreras.length>0){
             if(ramos.length>0){
                 if(contenidos.length>0){
-                    Filtro = {
+                    FiltroCRC = {
                                 model: Contenido,
                                 required: true,
                                 attributes: ['id','nombre'],
@@ -134,7 +152,7 @@ class Archivos {
                             }   
                 }
                 else{
-                    Filtro = {
+                    FiltroCRC = {
                         model: Contenido,
                         required: true,
                         attributes: ['id','nombre'],
@@ -157,7 +175,7 @@ class Archivos {
                 }
             }
             else{
-                Filtro = {
+                FiltroCRC = {
                     model: Contenido,
                     required: true,
                     attributes: ['id','nombre'],
@@ -179,7 +197,9 @@ class Archivos {
             }
         }
         else{
-            Filtro = {
+       
+            FiltroCRC = {
+            
                 model: Contenido,
                 required: true,
                 attributes: ['id','nombre'],
@@ -200,18 +220,19 @@ class Archivos {
         }
 
 
-
-   // console.log(Filtro)
-    
-       
-
         return Archivo
         .findAll({
+            where: { 
+                [Op.or]:{
+                        nombre: { [Op.like]: '%' + busqueda + '%' },
+                        descripcion: { [Op.like]: '%' + busqueda + '%' } 
+                        }
+                },
             order: [
                 [model.Categoria, 'nombre', 'asc']
                 ],
             include: [
-                Filtro,
+                FiltroCRC,
                 {
                     model: Categoria,
                     required: false,
@@ -219,10 +240,12 @@ class Archivos {
                 },
                 {
                     model: Usuario,
-                    required: false,
+                    required: true,
                     attributes: ['nombre'],
                 }
-          ]
+               
+          ],
+          limit: 100,
         })
         .then(
           data => {
@@ -230,7 +253,6 @@ class Archivos {
           }
           );    
      }
-    
 
 
     static ValorarArchivo(req, res) {
@@ -245,6 +267,27 @@ class Archivos {
         })     
             
      }
+     static DenunciarArchivo(req, res) {
+        const {descripcion, archivo,tipo} = req.body;
+
+        var denuncia = {
+            descripcion:descripcion,
+            cod_archivo: archivo,
+            cod_usuario: req.user.id,
+            cod_tipodenuncia: tipo,
+        }
+    
+        return  Denuncia.create(denuncia)
+        .then(()=>{
+          
+            return res.status(200).send({status: true, message:"Denuncia enviada"})  
+        })
+        .catch((error)=>{     
+            console.log(error)  
+           return res.status(200).send({status: false, message:"Denuncia enviada"}) 
+        })     
+            
+     }
 }
 
-export default Archivos;
+module.exports = Archivos
