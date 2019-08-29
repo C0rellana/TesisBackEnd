@@ -4,10 +4,8 @@ const authService = require('../services/auth');
 const Usuarios = require('../models').Usuario;
 const resp = require('./response');
 const Op = require('sequelize').Op;
-
 const addUser = user => Usuarios.create(user);
-
-
+const fs = require('fs');
 
 function login(req, res){
 	return authService.authenticate(req.body)
@@ -25,12 +23,65 @@ function login(req, res){
 function GetData(req, res){
 	const id = req.user.id;
 	return Usuarios.findOne({ 
-		attributes: ['id','cod_carrera','role','nombre'],
+		attributes: ['id','cod_carrera','role','nombre','preferencias','color','rut','img'],
 		where: {id: id}
 	})
 	.then(usuario => res.status(200).send(usuario));
-	
+};
 
+function ChangeColor(req, res){
+	const id = req.user.id;
+	return Usuarios.update(
+		{color: req.body.color},
+		{ where: { id: id } }
+	  )
+	.then(usuario => res.status(200).send(usuario));
+};
+function changePreferencias(req, res){
+	const id = req.user.id;
+	return Usuarios.update(
+		{preferencias: JSON.stringify(req.body.preferencias)},
+		{ where: { id: id } }
+	  )
+	.then(usuario => res.status(200).send(usuario));
+};
+
+async function ChangeAvatar(req, res){
+	const id = req.user.id;
+	var file= req.file;
+	const user = await Usuarios.findAll({
+        where:{id:id},
+        attributes: ['rut'],
+    })
+	.map(el => el.get({ plain: true }))
+	var url= "./server/avatars/"+user[0].rut+".png"
+	fs.writeFile(url, file.buffer, function(err) {
+		if(err) {
+			return resp.Error(res,'Oops... No se pudo cambiar la imagen')
+		}	
+		return resp.Success(res,'Archivo subido con exito')
+	}); 
+};
+
+async function GetAvatar(req, res){
+	const id = req.user.id;
+	var file= req.file;
+	const user = await Usuarios.findAll({
+        where:{id:id},
+        attributes: ['rut'],
+    })
+	.map(el => el.get({ plain: true }))
+
+	var url= "./server/avatars/"+user[0].rut+".png"
+
+	fs.readFile(url, function read(err, data) {
+		if (err) {
+			resp.Error(res)
+		}
+		else{
+			resp.Success(res,"Imagen",data)
+		}
+	});
 
 };
 
@@ -51,7 +102,7 @@ function register(req, res){
 		var user = {
 			nombre,
             correo,
-            rut,
+			rut,
             password: bcrypt.hashSync(password, config.saltRounds),
             cod_carrera
 		}
@@ -69,5 +120,9 @@ function register(req, res){
 module.exports = {
 	login,
 	register,
-	GetData
+	GetData,
+	ChangeColor,
+	changePreferencias,
+	ChangeAvatar,
+	GetAvatar
 }

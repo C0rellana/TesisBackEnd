@@ -24,6 +24,18 @@ module.exports = {
       password: {
         type: Sequelize.STRING
       },
+      preferencias: {
+        type: Sequelize.TEXT,
+        allowNull: true,
+      },
+      color: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
+      img: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
       cod_carrera: {
         type: Sequelize.INTEGER,
         onDelete: 'CASCADE',

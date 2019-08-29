@@ -24,6 +24,16 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       defaultValue: "USER"
     },
+    preferencias: {
+      type: DataTypes.TEXT,
+      defaultValue: "{color:'',columnas:''}"
+    },
+    color: {
+      type: DataTypes.STRING,
+    },
+    img: {
+      type: DataTypes.STRING,
+    },
     correo: {
       type: DataTypes.STRING,
       allowNull: {

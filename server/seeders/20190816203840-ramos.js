@@ -5,14 +5,35 @@ module.exports = {
     await queryInterface.bulkInsert('Ramos', [
       {
         nombre: 'Inteligencia Artificial',
-        codigo: 'ICI560-1',
+        codigo: 'ICI-612',
         cod_carrera:1,
         createdAt : new Date(),
         updatedAt : new Date(),
       },
       {
-        nombre: 'Metodos Formales',
-        codigo: 'ICI560-2',
+        nombre: 'Computación Gráfica',
+        codigo: 'ICI-613',
+        cod_carrera:1,
+        createdAt : new Date(),
+        updatedAt : new Date(),
+      },
+      {
+        nombre: 'Ingeniería de Software I',
+        codigo: 'INF-424',
+        cod_carrera:1,
+        createdAt : new Date(),
+        updatedAt : new Date(),
+      },
+      {
+        nombre: 'Ingeniería de Software II',
+        codigo: 'ICI-424',
+        cod_carrera:1,
+        createdAt : new Date(),
+        updatedAt : new Date(),
+      },
+      {
+        nombre: 'Calidad y Productividad de Software',
+        codigo: 'ICI-524',
         cod_carrera:1,
         createdAt : new Date(),
         updatedAt : new Date(),

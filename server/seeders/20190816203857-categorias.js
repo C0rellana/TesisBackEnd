@@ -45,14 +45,6 @@ module.exports = {
         color:'#03f9cc'
       },
       {id:6,
-        nombre: 'PRACTICAS',
-        descripcion: 'Sección para almacenar material relacionado con las practicas que ayuden a otros compañeros',
-        createdAt : new Date(),
-        updatedAt : new Date(),
-        icon: 'fa fa-briefcase mr-2',
-        color:'#7000d9'
-      },
-      {id:7,
         nombre: 'TALLERES',
         descripcion: 'Sección para almacenar material relacionado con talleres realizados en el ramo que ayuden a otros compañeros',
         createdAt : new Date(),
@@ -60,7 +52,7 @@ module.exports = {
         icon: 'fa fa-briefcase mr-2',
         color:'#0351f9'
       },
-      {id:8,
+      {id:7,
         nombre: 'CONTROLES',
         descripcion: 'Sección para almacenar controles que ayuden a otros compañeros',
         createdAt : new Date(),
