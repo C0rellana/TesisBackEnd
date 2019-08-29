@@ -35,13 +35,18 @@ class Notas {
 
 }
 function cartesian() {
-    var r = [], arg = arguments, max = arg.length-1;
+    var r = [], arg = arguments, max = arg.length-2;
+    notadeseada=parseInt(arg[max+1]);
     function helper(arr, i) {
         for (var j=0, l=arg[i].length; j<l; j++) {
             var a = arr.slice(0); 
             a.push(arg[i][j]);
-            if (i==max)
-                r.push(a);
+            if (i==max){
+               sum=a.reduce((a,b)=>a+b,0);
+               if(Math.round(sum)===notadeseada){
+                    r.push(a);
+                }
+            }
             else
                 helper(a, i+1);
         }
@@ -52,59 +57,46 @@ function cartesian() {
 
 function Notas2(NotasP,Porcentajes,notadeseada){
     
-    var result= cartesian(NotasP[0], NotasP[1]); 
-    console.log(result)
+    var result= cartesian(NotasP[0], NotasP[1],notadeseada); 
     var final = []
     for (let i = 0; i < result.length; i++) {
-       let nota = result[i][0]+result[i][1]
-      
-       if(nota >=notadeseada){
+       let nota = result[i][0]+result[i][1]   
         final.push({"nota1":Math.trunc(result[i][0]/Porcentajes[0]*100),"nota2":Math.trunc(result[i][1]/Porcentajes[1]*100),"final":nota})
-       }
-        
+    
     }
    return(final)
 }
 function Notas3(NotasP,Porcentajes,notadeseada){
 
-    var result= cartesian(NotasP[0], NotasP[1],NotasP[2]); 
+    var result= cartesian(NotasP[0], NotasP[1],NotasP[2],notadeseada); 
     var final = []
     for (let i = 0; i < result.length; i++) {
        let nota = result[i][0]+result[i][1]+result[i][2]
-      
-       if(nota >=notadeseada){
-        final.push({"nota1":Math.trunc(result[i][0]/Porcentajes[0]*100),"nota2":Math.trunc(result[i][1]/Porcentajes[1]*100),"nota3":Math.trunc(result[i][2]/Porcentajes[2]*100),"final":nota})
-       }
-        
+        final.push({"nota1":Math.trunc(result[i][0]/Porcentajes[0]*100),"nota2":Math.trunc(result[i][1]/Porcentajes[1]*100),"nota3":Math.trunc(result[i][2]/Porcentajes[2]*100),"final":nota})        
     }
    return(final)
 }
 function Notas4(NotasP,Porcentajes,notadeseada){
 
-    var result= cartesian(NotasP[0], NotasP[1],NotasP[2],NotasP[3]); 
+    var result= cartesian(NotasP[0], NotasP[1],NotasP[2],NotasP[3],notadeseada); 
     var final = []
     for (let i = 0; i < result.length; i++) {
        let nota = result[i][0]+result[i][1]+result[i][2]+result[i][3]
-      
-       if(nota >=notadeseada){
-        final.push({"nota1":Math.trunc(result[i][0]/Porcentajes[0]*100),"nota2":Math.trunc(result[i][1]/Porcentajes[1]*100),"nota3":Math.trunc(result[i][2]/Porcentajes[2]*100),"nota4":Math.trunc(result[i][3]/Porcentajes[3]*100),"final":Math.round(nota)})
-       }
+
+       final.push({"nota1":Math.trunc(result[i][0]/Porcentajes[0]*100),"nota2":Math.trunc(result[i][1]/Porcentajes[1]*100),"nota3":Math.trunc(result[i][2]/Porcentajes[2]*100),"nota4":Math.trunc(result[i][3]/Porcentajes[3]*100),"final":Math.round(nota)})
+
         
     }
    return(final)
 
 }
 function Notas5(NotasP,Porcentajes,notadeseada){
-
-    var result= cartesian(NotasP[0], NotasP[1],NotasP[2],NotasP[3],NotasP[4]); 
+   
+    var result= cartesian(NotasP[0], NotasP[1],NotasP[2],NotasP[3],NotasP[4],notadeseada); 
     var final = []
     for (let i = 0; i < result.length; i++) {
        let nota = result[i][0]+result[i][1]+result[i][2]+result[i][3]+result[i][4]
-      
-       if(nota>=notadeseada){
-        final.push({"nota1":Math.trunc(result[i][0]/Porcentajes[0]*100),"nota2":Math.trunc(result[i][1]/Porcentajes[1]*100),"nota3":Math.trunc(result[i][2]/Porcentajes[2]*100),"nota4":Math.trunc(result[i][3]/Porcentajes[3]*100),"nota5":Math.trunc(result[i][4]/Porcentajes[4]*100),"final":Math.round(nota)})
-       }
-        
+        final.push({"nota1":Math.trunc(result[i][0]/Porcentajes[0]*100),"nota2":Math.trunc(result[i][1]/Porcentajes[1]*100),"nota3":Math.trunc(result[i][2]/Porcentajes[2]*100),"nota4":Math.trunc(result[i][3]/Porcentajes[3]*100),"nota5":Math.trunc(result[i][4]/Porcentajes[4]*100),"final":Math.round(nota)})   
     }
 
    return(final)
