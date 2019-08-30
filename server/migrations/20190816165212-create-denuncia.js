@@ -11,6 +11,9 @@ module.exports = {
       descripcion: {
         type: Sequelize.STRING
       },
+      estado: {
+        type: Sequelize.BOOLEAN
+      },
       cod_archivo: {
         type: Sequelize.INTEGER,
         onDelete: 'CASCADE',

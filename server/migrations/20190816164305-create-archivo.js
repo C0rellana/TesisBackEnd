@@ -26,7 +26,7 @@ module.exports = {
       descripcion: {
         type: Sequelize.STRING
       },
-      status: {
+      estado: {
         type: Sequelize.BOOLEAN
       },
       isEnlace: {

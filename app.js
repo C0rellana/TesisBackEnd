@@ -4,8 +4,8 @@ const bodyParser = require('body-parser')
 const express = require('express')
 const routes = require('./server/routes')
 
-const hostname = '192.168.18.37';
-const port = 5000;
+const hostname = process.env.API_HOST;
+const port = process.env.API_PORT;
 const app = express()
 const server = http.createServer(app);
 

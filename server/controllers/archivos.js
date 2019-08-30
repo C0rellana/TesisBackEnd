@@ -130,6 +130,7 @@ class Archivos {
           return Archivo
           .findAll({
             limit: 100,
+            where:{estado:true},
             order: [
                 ['valoracion', 'DESC'],
               ],
@@ -274,6 +275,7 @@ class Archivos {
         return Archivo
         .findAll({
             where: { 
+                estado:true,
                 [Op.or]:{
                         nombre: { [Op.like]: '%' + busqueda + '%' },
                         descripcion: { [Op.like]: '%' + busqueda + '%' } 

@@ -1,5 +1,6 @@
 
 const Carrera = require('../controllers/carrera');
+const Denuncia = require('../controllers/denuncia');
 const Ramo = require('../controllers/ramo');
 const Categoria = require('../controllers/categoria');
 const Archivos = require('../controllers/archivos');
@@ -38,6 +39,12 @@ module.exports=(app) => {
    /*Rutas para obtener datos de categorias*/
   app.get('/categorias',authMiddleware.checkAuth,Categoria.List); 
   
+  /*Rutas para obtener las denuncias*/
+  app.get('/denuncias',Denuncia.List); 
+  app.get('/aceptarDenuncia',Denuncia.AceptarDenuncia); 
+  app.get('/ignorarDenuncia',Denuncia.IgnorarDenuncia); 
+
+
 
   /*Rutas para obtener datos de Archivos*/
   app.post('/archivos',upload.any(),authMiddleware.checkAuth, Archivos.Subir);

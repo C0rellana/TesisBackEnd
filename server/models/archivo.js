@@ -20,9 +20,10 @@ module.exports = (sequelize, DataTypes) => {
     valoracion: {
       type: DataTypes.FLOAT,
     },
-    status: {
+    estado:{
       type: DataTypes.BOOLEAN,
-    },
+      defaultValue: true,
+     },  
     isEnlace: {
       type: DataTypes.BOOLEAN,
     },

@@ -1,7 +1,11 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   const Denuncia = sequelize.define('Denuncia', {
-    descripcion: DataTypes.STRING,    
+    descripcion: DataTypes.STRING,  
+    estado:{
+     type: DataTypes.BOOLEAN,
+     defaultValue: true,
+    },    
 
     cod_archivo: {
       type: DataTypes.INTEGER,
