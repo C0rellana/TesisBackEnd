@@ -1,10 +1,28 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   const Categoria = sequelize.define('Categoria', {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true
+    },
     nombre: DataTypes.STRING,
     descripcion: DataTypes.STRING,
     icon: DataTypes.STRING,
-    color: DataTypes.STRING
+    color: DataTypes.STRING,
+    
+    cod_carrera: {
+      type: DataTypes.INTEGER,
+      allowNull: {
+        args: false,
+        msg: 'Debes completar este campo'
+      },
+      references: {
+        model: 'Carrera',
+        key: 'id',
+        as: 'cod_carrera',
+      },
+    },
   }, {});
 
 
@@ -15,11 +33,9 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey:  {name: 'cod_categoria', allowNull:false},
     });
 
-    Categoria.belongsToMany(models.Carrera, {
-      through: 'CarreraCategoria',
-      as: 'CategoriaCarreras',
-      foreignKey:  {name: 'cod_categoria', allowNull:false},
-      otherKey:'cod_carrera',
+    Categoria.belongsTo(models.Carrera, {
+      foreignKey: {name: 'cod_carrera', allowNull:false},
+      onDelete: 'CASCADE'
     });
 
   };

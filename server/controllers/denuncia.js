@@ -16,7 +16,7 @@ class Denuncias {
                         model: Denuncia,
                         required: true,
                         attributes: ['descripcion'],
-                        where:{estado:true},
+                        where:{estado:'activa'},
                         include: [
                             {
                                 model: Tipodenuncia,
@@ -51,14 +51,26 @@ class Denuncias {
         
     }
 
+    static GetTipos(req, res) {
+      
+        Tipodenuncia
+            .findAll({
+                attributes: [['id','value'],['nombre','label']],
+            })
+            .then(data=>{
+                res.send(data)
+            });
+        
+    }
+    
     static AceptarDenuncia(req,res){
-        var id_archivo = 5;
+        var id_archivo = req.body.cod_archivo;
 
         return  Archivo.update({ estado: false}, { where: { id: id_archivo } })
         .then(()=>{
-           return  Denuncia.update({ estado: false}, { where: { cod_archivo: id_archivo } }).then(() =>{
+           return  Denuncia.update({ estado: 'aceptada'}, { where: { cod_archivo: id_archivo } }).then(() =>{
 
-                return res.status(200).send({status: true, message:"Archivo Eliminado"});  
+                return res.status(200).send({status: true, message:"Denuncia Aceptada"});  
 
         })
         .catch(()=>{       
@@ -73,14 +85,14 @@ class Denuncias {
     }
 
     static IgnorarDenuncia(req,res){
-        var id_archivo = 4;
+        var id_archivo = req.body.cod_archivo;
 
-        return  Denuncia.update({ estado: false}, { where: { cod_archivo: id_archivo } }).then(() =>{
+        return  Denuncia.update({ estado: 'rechazada'}, { where: { cod_archivo: id_archivo } }).then(() =>{
 
-            return res.status(200).send({status: true, message:"Denuncias eliminadas"});  
+            return res.status(200).send({status: true, message:"Denuncias ignoradas"});  
 
         }).catch(()=>{
-            return res.status(200).send({status: false, message:"No se pudo ignorar la denuncia"});  
+            return res.status(200).send({status: false, message:"No se pudo completar la accion"});  
         })
            
       

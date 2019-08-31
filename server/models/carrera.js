@@ -33,13 +33,11 @@ module.exports = (sequelize, DataTypes) => {
     Carrera.hasMany(models.Ramo, {
       foreignKey:  {name: 'cod_carrera', allowNull:false},
     });
-    
-    Carrera.belongsToMany(models.Categoria, {
-      through: 'CarreraCategoria',
-      as: 'CarreraCategorias',
+    Carrera.hasMany(models.Categoria, {
       foreignKey:  {name: 'cod_carrera', allowNull:false},
-      otherKey:'cod_categoria',
     });
+    
+
   };
   return Carrera;
 };

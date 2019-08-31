@@ -20,6 +20,15 @@ module.exports = {
       color: {
         type:Sequelize.STRING
       },
+      cod_carrera: {
+        type: Sequelize.INTEGER,
+        onDelete: 'CASCADE',
+        references: {
+          model: 'Carreras',
+          key: 'id',
+          as: 'cod_carrera',
+        }
+      }, 
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

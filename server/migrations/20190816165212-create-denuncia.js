@@ -11,9 +11,10 @@ module.exports = {
       descripcion: {
         type: Sequelize.STRING
       },
-      estado: {
-        type: Sequelize.BOOLEAN
-      },
+      estado:{
+        type:   Sequelize.ENUM,
+        values: ['activa', 'aceptada', 'rechazada'] 
+      },  
       cod_archivo: {
         type: Sequelize.INTEGER,
         onDelete: 'CASCADE',

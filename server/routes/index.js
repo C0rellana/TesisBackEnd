@@ -38,20 +38,22 @@ module.exports=(app) => {
 
    /*Rutas para obtener datos de categorias*/
   app.get('/categorias',authMiddleware.checkAuth,Categoria.List); 
+  app.post('/agregarcategoria',authMiddleware.checkAuth,Categoria.AgregarCategoria); 
+  app.post('/editarcategoria',authMiddleware.checkAuth,Categoria.EditarCategoria); 
+  app.post('/eliminarcategoria',authMiddleware.checkAuth,Categoria.EliminarCategoria); 
   
   /*Rutas para obtener las denuncias*/
-  app.get('/denuncias',Denuncia.List); 
-  app.get('/aceptarDenuncia',Denuncia.AceptarDenuncia); 
-  app.get('/ignorarDenuncia',Denuncia.IgnorarDenuncia); 
-
-
+  app.get('/denuncias',authMiddleware.checkAuth,Denuncia.List); 
+  app.post('/AceptarDenuncia',authMiddleware.checkAuth,Denuncia.AceptarDenuncia); 
+  app.post('/ignorarDenuncia',authMiddleware.checkAuth,Denuncia.IgnorarDenuncia); 
+  app.post('/DenunciarArchivo',authMiddleware.checkAuth, Archivos.DenunciarArchivo);
+  app.get('/GetTipos',authMiddleware.checkAuth,Denuncia.GetTipos); 
 
   /*Rutas para obtener datos de Archivos*/
   app.post('/archivos',upload.any(),authMiddleware.checkAuth, Archivos.Subir);
   app.get('/archivos',authMiddleware.checkAuth, Archivos.GetAll);
   app.post('/GetArchivo',authMiddleware.checkAuth,Archivos.GetArchivo);
   app.post('/ValorarArchivo',authMiddleware.checkAuth, Archivos.ValorarArchivo);
-  app.post('/DenunciarArchivo',authMiddleware.checkAuth, Archivos.DenunciarArchivo);
   app.post('/FilterArchivos',authMiddleware.checkAuth, Archivos.FilterArchivos);
 
 };

@@ -1,11 +1,12 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   const Denuncia = sequelize.define('Denuncia', {
-    descripcion: DataTypes.STRING,  
+    descripcion: DataTypes.STRING,    
     estado:{
-     type: DataTypes.BOOLEAN,
-     defaultValue: true,
-    },    
+      type:   DataTypes.ENUM,
+      values: ['activa', 'aceptada', 'rechazada'], 
+      defaultValue: 'activa',
+    },   
 
     cod_archivo: {
       type: DataTypes.INTEGER,
