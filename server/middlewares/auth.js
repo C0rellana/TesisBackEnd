@@ -2,14 +2,13 @@ const jwt = require('jsonwebtoken');
 const config =  require('../services/config');
 
 const checkAuth = (req, res, next) => {
-	//console.log(req.headers)
 	var token = req.headers['authorization'];
 	if (!token)
-		return res.status(403).send({ auth: false, message: 'Error. Debe iniciar sesión' });
+		return res.status(401).send({ auth: false, message: 'Error. Debe iniciar sesión' });
 
 	jwt.verify(token, config.jwtSecret, (err, decoded) => {
 		if (err)
-			return res.status(500).send({ auth: false, message: 'Error al realizar esta accion. No tiene permisos' });
+			return res.status(401).send({ auth: false, message: 'Error al realizar esta accion. No tiene permisos' });
 
     req.user = {
 			login: decoded.login,
