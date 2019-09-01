@@ -43,7 +43,7 @@ module.exports=(app) => {
   app.post('/eliminarcategoria',authMiddleware.checkAuth,Categoria.EliminarCategoria); 
   
   /*Rutas para obtener las denuncias*/
-  app.get('/denuncias',authMiddleware.checkAuth,Denuncia.List); 
+  app.post('/denuncias',authMiddleware.checkAuth,Denuncia.List); 
   app.post('/AceptarDenuncia',authMiddleware.checkAuth,Denuncia.AceptarDenuncia); 
   app.post('/ignorarDenuncia',authMiddleware.checkAuth,Denuncia.IgnorarDenuncia); 
   app.post('/DenunciarArchivo',authMiddleware.checkAuth, Archivos.DenunciarArchivo);

@@ -5,18 +5,20 @@ const { Denuncia,Usuario,Archivo,Tipodenuncia,Contenido,Ramo } = model;
 class Denuncias {
 
     static List(req, res) {
+        var estado=req.body.tipo;
+        console.log(estado)
       
         Archivo
             .findAll({
                 attributes: ['id','nombre','descripcion'],
-                where:{estado:true},
+                //where:{estado:true},
                
                 include: [
                     {
                         model: Denuncia,
                         required: true,
                         attributes: ['descripcion'],
-                        where:{estado:'activa'},
+                        where:{estado:estado},
                         include: [
                             {
                                 model: Tipodenuncia,
@@ -65,7 +67,7 @@ class Denuncias {
     
     static AceptarDenuncia(req,res){
         var id_archivo = req.body.cod_archivo;
-
+        
         return  Archivo.update({ estado: false}, { where: { id: id_archivo } })
         .then(()=>{
            return  Denuncia.update({ estado: 'aceptada'}, { where: { cod_archivo: id_archivo } }).then(() =>{
@@ -86,14 +88,25 @@ class Denuncias {
 
     static IgnorarDenuncia(req,res){
         var id_archivo = req.body.cod_archivo;
+        console.log(id_archivo)
 
-        return  Denuncia.update({ estado: 'rechazada'}, { where: { cod_archivo: id_archivo } }).then(() =>{
+        return  Archivo.update({ estado: true}, { where: { id: id_archivo } })
+        .then(()=>{
+           return  Denuncia.update({ estado: 'rechazada'}, { where: { cod_archivo: id_archivo } }).then(() =>{
 
-            return res.status(200).send({status: true, message:"Denuncias ignoradas"});  
+                return res.status(200).send({status: true, message:"Denuncia Ignorada"});  
 
-        }).catch(()=>{
-            return res.status(200).send({status: false, message:"No se pudo completar la accion"});  
         })
+        .catch((error)=>{   
+            console.log(error)   
+            return res.status(200).send({status: false, message:"No se pudo completar la accion"}) 
+         })  
+           
+        })
+        .catch((error)=>{   
+            console.log(error)    
+           return res.status(200).send({status: false, message:"No se pudo completar la accion"}) 
+        })  
            
       
     }
