@@ -8,6 +8,9 @@ module.exports = (sequelize, DataTypes) => {
         msg: 'Debes completar este campo'
       }
     },
+    unidad: {
+      type: DataTypes.INTEGER,
+    },
     cod_ramo: {
       type: DataTypes.INTEGER,
       allowNull: {

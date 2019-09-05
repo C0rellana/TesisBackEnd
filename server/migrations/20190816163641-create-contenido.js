@@ -11,6 +11,9 @@ module.exports = {
       nombre: {
         type: Sequelize.STRING
       },
+      unidad: {
+        type: Sequelize.INTEGER
+      },
       cod_ramo: {
         type: Sequelize.INTEGER,
         onDelete: 'CASCADE',

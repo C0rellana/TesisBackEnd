@@ -26,7 +26,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     preferencias: {
       type: DataTypes.TEXT,
-      defaultValue: "{color:'',columnas:''}"
+      // defaultValue: "{'color':'','columnas':''}"
     },
     color: {
       type: DataTypes.STRING,

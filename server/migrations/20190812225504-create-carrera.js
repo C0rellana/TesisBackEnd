@@ -17,7 +17,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       token: {
-        type: Sequelize.JSON
+        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,

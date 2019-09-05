@@ -1,6 +1,4 @@
 const model = require('../models')
-
-const resp = require('./response');
 const { Carrera ,Ramo,Contenido,Usuario } = model;
 
 class Carreras {
@@ -59,6 +57,29 @@ class Carreras {
         data => res.status(200).send(data));
 
   }
+
+  static CarreraToken(req, res) {
+    var user_id=req.user.id;
+    const token = req.body.token
+    console.log(token)
+    return Usuario.findOne({where:{id:user_id}}).then(usuario=>{
+      return Carrera
+        .update(
+          {token:token},
+          {where:{id:usuario.cod_carrera}}
+        )
+        .then(() => res.status(201).send({
+          success: true,
+          message: 'Se ha modificado correctamente',
+        }))
+        .catch(error => {
+          console.log(error)
+          res.status(400).send(error)
+        });
+
+    })
+  }
+
 }
 
 module.exports = Carreras

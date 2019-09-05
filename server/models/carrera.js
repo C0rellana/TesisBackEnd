@@ -18,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
     token: {
-      type: DataTypes.JSON,
+      type: DataTypes.STRING,
       allowNull: {
         args: false,
         msg: 'Debes completar este campo'
