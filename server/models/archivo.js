@@ -27,6 +27,10 @@ module.exports = (sequelize, DataTypes) => {
     isEnlace: {
       type: DataTypes.BOOLEAN,
     },
+    ubicacion: {
+      type:   DataTypes.ENUM,
+      values: ['GOOGLE', 'DROPBOX'] 
+    },
     cod_contenido: {
       type: DataTypes.INTEGER,
       allowNull: {

@@ -3,9 +3,12 @@ const model = require('../models')
 const { Archivo,Ramo,Usuario,Categoria,Contenido,Carrera,Denuncia} = model;
 var path = require('path')
 const Dropbox = require('../services/Dropbox');
-const TOKEN = 'iBumdY95utkAAAAAAAAA-sl12H42Sl7_bXiZTTtNjNx5zZmmCigSMLt7JgPojSkF';
+const GoogleDrive = require('../services/GoogleDrive');
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
+const sf = require('streamifier');
+
+
 
 async function GetPath(cod_usuario,cod_contenido,cod_categoria,filename,extension){
      //obtener el nombre de la carrera
@@ -51,6 +54,89 @@ async function GetPath(cod_usuario,cod_contenido,cod_categoria,filename,extensio
 
 
 }
+async function uploadGOOGLE(file,cod_contenido,cod_usuario,cod_categoria,descripcion,correo,token,carpeta_id){
+
+    var archivo=  sf.createReadStream(file.buffer)
+    var extension= path.extname(file.originalname);
+    var filename = path.basename(file.originalname,extension);
+    var nombre_archivo=filename+ Date.now()+extension;
+
+   return GoogleDrive.DriveUpload(correo,token,nombre_archivo,carpeta_id,archivo,file.mimetype).then(data=>{
+        
+        // console.log(data.data)
+         var archivo = {
+            nombre:filename.charAt(0).toUpperCase() + filename.slice(1).toLowerCase(),
+            enlace:data.data,//id del archivo
+            cod_contenido,
+            cod_usuario,
+            año: new Date().getFullYear(),
+            formato:extension.substring(1).toUpperCase(),
+            valoracion:0.0,
+            cod_categoria,
+            descripcion,
+            status: true,
+            isEnlace:false,
+        }
+        return Archivo.create(archivo)
+            .then(()=>{return true})
+            .catch(()=>{return false})
+            
+
+    });
+}
+async function uploadDROPBOX(file,cod_contenido,cod_usuario,cod_categoria,descripcion,token){
+
+    var extension= path.extname(file.originalname);
+    var filename = path.basename(file.originalname,extension);
+    var url= await GetPath(cod_usuario,cod_contenido,cod_categoria,filename,extension);
+
+    return Dropbox.DropboxUpload(token,url,file.buffer).then(data=>{
+  
+        var archivo = {
+           nombre:filename.charAt(0).toUpperCase() + filename.slice(1).toLowerCase(),
+           enlace:url,//id del archivo
+           cod_contenido,
+           cod_usuario,
+           año: new Date().getFullYear(),
+           formato:extension.substring(1).toUpperCase(),
+           valoracion:0.0,
+           cod_categoria,
+           descripcion,
+           status: true,
+           isEnlace:false,
+       }
+       return Archivo.create(archivo)
+           .then(()=>{
+               return true
+            })
+           .catch(()=>{ 
+            return false})
+           
+
+   });
+}
+async function uploadEnlace(cod_contenido,cod_usuario,cod_categoria,descripcion,enlace){
+
+    var archivo = {
+        nombre:enlace.nombre,
+        enlace:enlace.enlace,
+        cod_contenido,
+        cod_usuario,
+        año: new Date().getFullYear(),
+        formato:"URL",
+        valoracion:0.0,
+        cod_categoria,
+        descripcion,
+        status: true,
+        isEnlace:true,
+    } 
+    return Archivo.create(archivo)
+    .then(()=>{return true})
+    .catch(()=>{return false})
+   
+}
+
+
 
 class Archivos {
 
@@ -61,118 +147,130 @@ class Archivos {
         let responses = [];
         //si la entrada son enlaces:          
         if(enlace==='true'){
+
             var enlaces=JSON.parse(req.body.enlaces)
             for (let i = 0; i < enlaces.length; i++) {
-                var archivo = {
-                    nombre:enlaces[i].nombre,
-                    enlace:enlaces[i].enlace,
-                    cod_contenido,
-                    cod_usuario,
-                    año: new Date().getFullYear(),
-                    formato:"URL",
-                    valoracion:0.0,
-                    cod_categoria,
-                    descripcion,
-                    status: true,
-                    isEnlace:true,
-                } 
-                var IsSaved  = await Archivo.create(archivo)
+                var s=  uploadEnlace(cod_contenido,cod_usuario,cod_categoria,descripcion,enlaces[i])
                     .then(()=>{return true})
-                    .catch(()=>{return false})
-                if(IsSaved){responses.push(false)}
-                else{responses.push(false)}
+                    .catch(()=>{return false})  
+
+                responses.push(s)
             }
         }
-        else{
+        else{  
 
-            for (let i = 0; i < req.files.length; i++) {
-
-                var file = req.files[i];
-                var extension= path.extname(file.originalname);
-                var filename = path.basename(file.originalname,extension);
-                var url= await GetPath(cod_usuario,cod_contenido,cod_categoria,filename,extension);
-                
-                var archivo = {
-                    nombre:filename.charAt(0).toUpperCase() + filename.slice(1).toLowerCase(),
-                    enlace:url,
-                    cod_contenido,
-                    cod_usuario,
-                    año: new Date().getFullYear(),
-                    formato:extension.substring(1).toUpperCase(),
-                    valoracion:0.0,
-                    cod_categoria,
-                    descripcion,
-                    status: true,
-                    isEnlace:false,
+            return Usuario.findOne(
+                {where:{id:cod_usuario},
+                include:[ {
+                    model: Carrera,
+                    required: true,
+                    attributes: ['ubicacion','token','correo','carpeta_id'],
+                }]
+            }).then(async data=>{
+                var ubicacion = data.Carrera.ubicacion;
+                var token = data.Carrera.token;
+                var correo=data.Carrera.correo;
+                var carpeta_id=data.Carrera.carpeta_id;
+                for (let i = 0; i < req.files.length; i++) {
+                    var file=req.files[i];
+                    if(ubicacion==="GOOGLE"){
+                        var s= await uploadGOOGLE(file,cod_contenido,cod_usuario,cod_categoria,descripcion,correo,token,carpeta_id)
+                            .then(()=>{return true})
+                            .catch(()=>{return false})   
+                    }
+                    if(ubicacion==="DROPBOX"){
+                        var s= await uploadDROPBOX(file,cod_contenido,cod_usuario,cod_categoria,descripcion,token)
+                            .then(()=>{return true})
+                            .catch(()=>{return false})  
+                    }
+                    responses.push(s)
                 }
-                var IsUpload= await Dropbox.DropboxUpload(TOKEN,url,file.buffer);
-                if(IsUpload){
-                    var IsSaved  = await Archivo.create(archivo)
-                        .then(()=>{return true})
-                        .catch(()=>{return false})
-                  
-                    if(IsSaved){responses.push(true)}
-                    else{responses.push(false)}
-                }
-                else{responses.push(false)}
-            }  
+                res.send(responses)
+            }).catch(err=>{
+                res.send(false)
+            });
         }
-        
+    
+       
+    }
+ 
+    static async GetArchivo(req, res) {
+        var nombreArchivo= req.body.nombre;
+        var idArchivo= req.body.id;
+       return Archivo.findOne(
+                {where:{id:idArchivo},
+                include:[ {
+                    model: Usuario,
+                    required: true,
+                    attributes: ['cod_carrera'],
+                    include:[ {
+                        model: Carrera,
+                        required: true,
+                        attributes: ['ubicacion','token','correo','nombre'],
+                    }]
+                }]
+            }).then(async archivo=>{
+                
+                    var ubicacion = archivo.Usuario.Carrera.ubicacion;
+                    var token = archivo.Usuario.Carrera.token;
+                    var correo=archivo.Usuario.Carrera.correo;
+                    
+                    if(ubicacion==="GOOGLE"){
+                    
+                        await  GoogleDrive.GetFile(correo,token,nombreArchivo).then(data=>{
+                            res.send({url:data.data.webContentLink,success:true});  
+                        }).catch(()=>{
+                            res.send({message:"Contenido no encontrado",success:false});  
+                        });
+                    }
+                    if(ubicacion==="DROPBOX"){
+                        await Dropbox.GetFile(token,nombreArchivo).then(data=>{
+                            return res.send({url:data.link,success:true});  
+                        }).catch(()=>{
+                            return res.send({message:"Contenido no encontrado",success:false});  
+                        });
+                    }
+                });
+           
       
-        res.send(responses)
-        
-        
-
     }
 
     static GetAll(req, res) {
 
-          return Archivo
-          .findAll({
-            limit: 100,
-            where:{estado:true},
-            order: [
-                ['valoracion', 'DESC'],
-              ],
-            include: [
-                {
-                    model: Contenido,
-                    required: false,
-                    attributes: ['id','nombre'],
-                    include: [
-                        {
-                            model: Ramo,
-                            required: false,
-                            attributes: [['nombre','label'],'codigo'],
-                        }]
-                },
-                {
-                    model: Categoria,
-                    required: false,
-                    attributes: ['id','nombre','color'],
-                },
-                {
-                    model: Usuario,
-                    required: false,
-                    attributes: ['nombre'],
-                }
-            ]
-          })
-          .then(
-            data => res.status(200).send(data));    
-    }
-
-
-
-    static async GetArchivo(req, res) {
-       await Dropbox.GetFile(TOKEN, req.body.nombre).then(data=>{
-        res.send({url:data.link,success:true});  
-       }).catch(()=>{
-        res.send({message:"Contenido no encontrado",success:false});  
-       });
-             
-    }
-
+        return Archivo
+        .findAll({
+          limit: 100,
+          where:{estado:true},
+          order: [
+              ['valoracion', 'DESC'],
+            ],
+          include: [
+              {
+                  model: Contenido,
+                  required: false,
+                  attributes: ['id','nombre'],
+                  include: [
+                      {
+                          model: Ramo,
+                          required: false,
+                          attributes: [['nombre','label'],'codigo'],
+                      }]
+              },
+              {
+                  model: Categoria,
+                  required: false,
+                  attributes: ['id','nombre','color'],
+              },
+              {
+                  model: Usuario,
+                  required: false,
+                  attributes: ['nombre'],
+              }
+          ]
+        })
+        .then(
+          data => res.status(200).send(data));    
+  }
 
     static async FilterArchivos(req, res) {
         const {carreras,ramos,contenidos,busqueda} = req.body;

@@ -3,7 +3,6 @@ const logger = require('morgan')
 const bodyParser = require('body-parser')
 const express = require('express')
 const routes = require('./server/routes')
-
 const hostname = process.env.API_HOST;
 const port = process.env.API_PORT;
 const app = express()

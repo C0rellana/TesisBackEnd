@@ -32,6 +32,10 @@ module.exports = {
       isEnlace: {
         type: Sequelize.BOOLEAN
       },
+      ubicacion: {
+        type:   Sequelize.ENUM,
+        values: ['GOOGLE', 'DROPBOX'] 
+      },
       cod_usuario: {
         type: Sequelize.INTEGER,
         onDelete: 'CASCADE',

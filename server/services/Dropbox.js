@@ -15,14 +15,13 @@ function DropboxList(TOKEN){
 }
 
 async function DropboxUpload(TOKEN,nombre,file){
-    var dbx = new Dropbox({ accessToken: TOKEN, fetch: fetch });
-    
+    var dbx = new Dropbox({ accessToken: TOKEN, fetch: fetch });    
     try {
         const response = await dbx.filesUpload({ path: '/' + nombre, contents: file });
-        return true;
+        return {success:true, message:"Archivo guardado"};
     }
     catch (error) {
-        return false;
+        return {success:false, message:"No se ha guardado el archivo"};
     }
 }
 

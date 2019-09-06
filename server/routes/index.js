@@ -10,7 +10,6 @@ const Notas = require('../controllers/notas');
 const authController = require('../controllers/auth');
 const authMiddleware = require('../middlewares/auth');
 const admin = require('../controllers/admin');
-// const a = require('../services/GoogleDrive');
 var multer  = require('multer')
 var upload = multer();
 
@@ -18,7 +17,6 @@ var upload = multer();
 module.exports=(app) => {
 
   app.post('/notas', Notas.List);
-
 
   /*Rutas para obtener datos del usuario*/
   app.post('/login', authController.login);

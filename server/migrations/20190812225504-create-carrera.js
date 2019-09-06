@@ -17,7 +17,17 @@ module.exports = {
         type: Sequelize.STRING
       },
       token: {
+        type: Sequelize.STRING(3000)
+      },
+      correo: {
         type: Sequelize.STRING
+      },
+      carpeta_id: {
+        type: Sequelize.STRING
+      },
+      ubicacion: {
+        type:   Sequelize.ENUM,
+        values: ['GOOGLE', 'DROPBOX'] 
       },
       createdAt: {
         allowNull: false,
