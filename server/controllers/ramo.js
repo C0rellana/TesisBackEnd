@@ -65,7 +65,7 @@ class Ramos {
  
         return Ramo
             .destroy({ where: { id: id } })
-            .then(Ramos => res.status(200).send({status: true,data:Ramos, message:"Ramo editado"}))
+            .then(Ramos => res.status(200).send({status: true,data:Ramos, message:"Ramo Eliminado"}))
             .catch(()=>res.status(200).send({status: false, message:"No se pudo completar la acción"}))
     
      }

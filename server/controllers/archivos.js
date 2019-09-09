@@ -135,8 +135,14 @@ async function uploadEnlace(cod_contenido,cod_usuario,cod_categoria,descripcion,
     .catch(()=>{return false})
    
 }
-
-
+function clean(obj) {
+    for (var atr in obj) { 
+        if (obj[atr] === null || obj[atr] === undefined || obj[atr] === '') {
+        delete obj[atr];
+        }
+    }
+    return obj
+}
 
 class Archivos {
 
@@ -270,7 +276,63 @@ class Archivos {
         })
         .then(
           data => res.status(200).send(data));    
-  }
+    }
+
+    static misArchivos(req, res) {
+        var user_id= req.user.id;
+        return Archivo
+        .findAll({
+          limit: 100,
+          where:{estado:true,cod_usuario:user_id},
+          include: [
+              {
+                  model: Contenido,
+                  required: false,
+                  attributes: [['id','value'],['nombre','label']],
+                  include: [
+                      {
+                          model: Ramo,
+                          required: false,
+                          attributes: [['id','value'],['nombre','label']],
+                      }]
+              },
+              {
+                  model: Categoria,
+                  required: false,
+                  attributes: [['id','value'],['nombre','label']],
+              },
+          ]
+        })
+        .then(data => {
+          res.status(200).send(data)
+          });    
+    }
+
+    static EditArchivo(req,res){
+        var {archivo_id,cod_contenido,cod_categoria,descripcion,nombre} = req.body;
+        var object={
+            cod_contenido:cod_contenido,
+            cod_categoria:cod_categoria,
+            descripcion:descripcion,
+            nombre:nombre,
+        }
+        object= clean(object)
+            return Archivo
+            .update(object,{ where: { id: archivo_id } })
+            .then(Archivo => res.status(200).send({status: true,data:Archivo, message:"Archivo editado"}))
+            .catch(()=>res.status(200).send({status: false, message:"No se pudo completar la acción"}))
+       
+
+    }
+    
+    static DeleteArchivo(req,res){
+        var {archivo_id} = req.body;
+        return Archivo
+        .update({ estado: false},{ where: { id: archivo_id } })
+        .then(Archivo => res.status(200).send({status: true,data:Archivo, message:"Archivo Eliminado"}))
+        .catch(()=>res.status(200).send({status: false, message:"No se pudo completar la acción"}))
+
+    }
 
     static async FilterArchivos(req, res) {
         const {carreras,ramos,contenidos,busqueda} = req.body;
@@ -404,7 +466,6 @@ class Archivos {
           }
           );    
     }
-
 
     static ValorarArchivo(req, res) {
         const { archivo,value} = req.body;

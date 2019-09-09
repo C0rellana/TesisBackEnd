@@ -68,10 +68,12 @@ module.exports=(app) => {
   /*Rutas para obtener datos de Archivos*/
   app.post('/archivos',upload.any(),authMiddleware.checkAuth, Archivos.Subir);
   app.get('/archivos',authMiddleware.checkAuth, Archivos.GetAll);
+  app.get('/misarchivos',authMiddleware.checkAuth, Archivos.misArchivos);
   app.post('/GetArchivo',authMiddleware.checkAuth,Archivos.GetArchivo);
   app.post('/ValorarArchivo',authMiddleware.checkAuth, Archivos.ValorarArchivo);
   app.post('/FilterArchivos',authMiddleware.checkAuth, Archivos.FilterArchivos);
-
+  app.post('/DeleteArchivo',authMiddleware.checkAuth, Archivos.DeleteArchivo);
+  app.post('/EditArchivo',authMiddleware.checkAuth, Archivos.EditArchivo);
 
   /*Rutas para obtener datos de roles*/
 
