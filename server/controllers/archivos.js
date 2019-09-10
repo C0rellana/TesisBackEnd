@@ -336,7 +336,7 @@ class Archivos {
 
     static async FilterArchivos(req, res) {
         const {carreras,ramos,contenidos,busqueda} = req.body;
-        console.log(carreras , ramos, contenidos,busqueda)
+      
 
        var FiltroCRC= {};
         if(carreras.length>0){

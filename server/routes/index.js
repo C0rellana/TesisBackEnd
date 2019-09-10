@@ -8,24 +8,24 @@ const Categoria = require('../controllers/categoria');
 const Archivos = require('../controllers/archivos');
 const Notas = require('../controllers/notas');
 const authController = require('../controllers/auth');
-const authMiddleware = require('../middlewares/auth');
 const admin = require('../controllers/admin');
 var multer  = require('multer')
 var upload = multer();
-
+const authMiddleware = require('../middlewares/auth');
+const logMiddleware = require('../middlewares/log');
 
 module.exports=(app) => {
 
-  app.post('/notas', Notas.List);
+  app.post('/notas',authMiddleware.checkAuth,logMiddleware.Notas, Notas.List);
 
   /*Rutas para obtener datos del usuario*/
-  app.post('/login', authController.login);
-  app.post('/register', authController.register);
+  app.post('/login',logMiddleware.general, authController.login); //LOGIN
+  app.post('/register',logMiddleware.general,authController.register);
   
   app.get('/GetData',authMiddleware.checkAuth,authController.GetData); 
-  app.post('/ChangeColor',authMiddleware.checkAuth,authController.ChangeColor); 
+  app.post('/ChangeColor',authMiddleware.checkAuth,logMiddleware.general,authController.ChangeColor); 
 
-  app.post('/Avatar',upload.single('file'),authMiddleware.checkAuth,authController.ChangeAvatar); 
+  app.post('/Avatar',upload.single('file'),authMiddleware.checkAuth,logMiddleware.general,authController.ChangeAvatar); 
   app.get('/Avatar',authMiddleware.checkAuth,authController.GetAvatar); 
 
   app.post('/changePreferencias',authMiddleware.checkAuth,authController.changePreferencias); 
@@ -66,12 +66,12 @@ module.exports=(app) => {
   app.get('/GetTipos',authMiddleware.checkAuth,Denuncia.GetTipos); 
 
   /*Rutas para obtener datos de Archivos*/
-  app.post('/archivos',upload.any(),authMiddleware.checkAuth, Archivos.Subir);
+  app.post('/archivos',upload.any(),authMiddleware.checkAuth,logMiddleware.compartir, Archivos.Subir); //LOG COMPARTIR
   app.get('/archivos',authMiddleware.checkAuth, Archivos.GetAll);
   app.get('/misarchivos',authMiddleware.checkAuth, Archivos.misArchivos);
   app.post('/GetArchivo',authMiddleware.checkAuth,Archivos.GetArchivo);
   app.post('/ValorarArchivo',authMiddleware.checkAuth, Archivos.ValorarArchivo);
-  app.post('/FilterArchivos',authMiddleware.checkAuth, Archivos.FilterArchivos);
+  app.post('/FilterArchivos',authMiddleware.checkAuth,logMiddleware.buscar, Archivos.FilterArchivos); //LOG BUSCAR
   app.post('/DeleteArchivo',authMiddleware.checkAuth, Archivos.DeleteArchivo);
   app.post('/EditArchivo',authMiddleware.checkAuth, Archivos.EditArchivo);
 
