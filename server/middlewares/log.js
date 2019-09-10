@@ -16,8 +16,8 @@ async function GetCarrera(cod_usuario){
        ]
    })
    .map(el => el.get({ plain: true }))
-
-   return user[0].Carrera;
+   
+   return user.length>0?user[0].Carrera:null;
 }
 //por correo
 async function GetCarrera2(correo){
@@ -34,8 +34,9 @@ async function GetCarrera2(correo){
        ]
    })
    .map(el => el.get({ plain: true }))
+ 
+   return user.length>0?user[0].Carrera:null;
 
-   return user[0].Carrera;
 }
 
 const general = async (req, res, next) => {
