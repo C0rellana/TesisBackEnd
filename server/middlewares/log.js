@@ -54,7 +54,7 @@ const general = async (req, res, next) => {
         metodo:req.method, 
         user:req.user?req.user.id:null,
         user_carrera_id:carrera?carrera.id:null,
-        user_carrera_nombre:carre?carre.nombre:null,
+        user_carrera_nombre:carrera?carrera.nombre:null,
         date:new Date(),
     }
      await Log.create(object);
