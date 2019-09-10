@@ -184,7 +184,7 @@ const Notas = async(req, res, next) => {
     next();
 }
 
-
+  
 module.exports = {
     buscar,
     compartir,
