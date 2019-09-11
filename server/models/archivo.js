@@ -31,6 +31,9 @@ module.exports = (sequelize, DataTypes) => {
       type:   DataTypes.ENUM,
       values: ['GOOGLE', 'DROPBOX'] 
     },
+    size: {
+      type: DataTypes.INTEGER,
+    },
     cod_contenido: {
       type: DataTypes.INTEGER,
       allowNull: {

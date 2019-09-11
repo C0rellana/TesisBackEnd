@@ -55,7 +55,6 @@ async function GetPath(cod_usuario,cod_contenido,cod_categoria,filename,extensio
 
 }
 async function uploadGOOGLE(file,cod_contenido,cod_usuario,cod_categoria,descripcion,correo,token,carpeta_id){
-
     var archivo=  sf.createReadStream(file.buffer)
     var extension= path.extname(file.originalname);
     var filename = path.basename(file.originalname,extension);
@@ -76,6 +75,7 @@ async function uploadGOOGLE(file,cod_contenido,cod_usuario,cod_categoria,descrip
             descripcion,
             status: true,
             isEnlace:false,
+            size: file.size,
         }
         return Archivo.create(archivo)
             .then(()=>{return true})
@@ -85,7 +85,6 @@ async function uploadGOOGLE(file,cod_contenido,cod_usuario,cod_categoria,descrip
     });
 }
 async function uploadDROPBOX(file,cod_contenido,cod_usuario,cod_categoria,descripcion,token){
-
     var extension= path.extname(file.originalname);
     var filename = path.basename(file.originalname,extension);
     var url= await GetPath(cod_usuario,cod_contenido,cod_categoria,filename,extension);
@@ -104,6 +103,7 @@ async function uploadDROPBOX(file,cod_contenido,cod_usuario,cod_categoria,descri
            descripcion,
            status: true,
            isEnlace:false,
+           size: file.size,
        }
        return Archivo.create(archivo)
            .then(()=>{
@@ -116,7 +116,7 @@ async function uploadDROPBOX(file,cod_contenido,cod_usuario,cod_categoria,descri
    });
 }
 async function uploadEnlace(cod_contenido,cod_usuario,cod_categoria,descripcion,enlace){
-
+    console.log("a")
     var archivo = {
         nombre:enlace.nombre,
         enlace:enlace.enlace,
@@ -130,9 +130,9 @@ async function uploadEnlace(cod_contenido,cod_usuario,cod_categoria,descripcion,
         status: true,
         isEnlace:true,
     } 
-    return Archivo.create(archivo)
+    return await Archivo.create(archivo)
     .then(()=>{return true})
-    .catch(()=>{return false})
+    .catch((error)=>{return false})
    
 }
 function clean(obj) {
@@ -156,12 +156,13 @@ class Archivos {
 
             var enlaces=JSON.parse(req.body.enlaces)
             for (let i = 0; i < enlaces.length; i++) {
-                var s=  uploadEnlace(cod_contenido,cod_usuario,cod_categoria,descripcion,enlaces[i])
+                var s= await  uploadEnlace(cod_contenido,cod_usuario,cod_categoria,descripcion,enlaces[i])
                     .then(()=>{return true})
                     .catch(()=>{return false})  
 
                 responses.push(s)
             }
+            res.send(responses)
         }
         else{  
 

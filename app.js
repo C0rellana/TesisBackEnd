@@ -3,11 +3,14 @@ const logger = require('morgan')
 const bodyParser = require('body-parser')
 const express = require('express')
 const routes = require('./server/routes')
+var device = require('express-device');
 const hostname = process.env.API_HOST;
 const port = process.env.API_PORT;
 const app = express()
 const server = http.createServer(app);
 
+//get device
+app.use(device.capture());
 
 // Mostrar peticiones por consola
 app.use(logger('dev')); 

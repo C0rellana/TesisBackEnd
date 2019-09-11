@@ -69,7 +69,7 @@ module.exports=(app) => {
   app.post('/archivos',upload.any(),authMiddleware.checkAuth,logMiddleware.compartir, Archivos.Subir); //LOG COMPARTIR
   app.get('/archivos',authMiddleware.checkAuth, Archivos.GetAll);
   app.get('/misarchivos',authMiddleware.checkAuth, Archivos.misArchivos);
-  app.post('/GetArchivo',authMiddleware.checkAuth,Archivos.GetArchivo);
+  app.post('/GetArchivo',authMiddleware.checkAuth,logMiddleware.general,Archivos.GetArchivo);
   app.post('/ValorarArchivo',authMiddleware.checkAuth, Archivos.ValorarArchivo);
   app.post('/FilterArchivos',authMiddleware.checkAuth,logMiddleware.buscar, Archivos.FilterArchivos); //LOG BUSCAR
   app.post('/DeleteArchivo',authMiddleware.checkAuth, Archivos.DeleteArchivo);

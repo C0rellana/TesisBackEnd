@@ -50,7 +50,7 @@ const general = async (req, res, next) => {
     }
     var object={
         ip:req.connection.remoteAddress,
-        navegador:req.headers['user-agent'],
+        navegador:req.device.type.toUpperCase(),
         accion:url,
         metodo:req.method, 
         user:req.user?req.user.id:null,
