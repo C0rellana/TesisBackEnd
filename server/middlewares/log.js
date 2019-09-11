@@ -78,7 +78,7 @@ const buscar = async (req, res, next) => {
         
                                 var object={
                                     ip:req.connection.remoteAddress,
-                                    navegador:req.headers['user-agent'],
+                                    navegador:req.device.type.toUpperCase(),
                                     accion:req.url==="/FilterArchivos"?"BUSCAR":"",
                                     metodo:req.method,
                                     date:new Date(),
@@ -101,7 +101,7 @@ const buscar = async (req, res, next) => {
                         await Ramo.findByPk(ramo).then(async data=>{
                             var object={
                                 ip:req.connection.remoteAddress,
-                                navegador:req.headers['user-agent'],
+                                navegador:req.device.type.toUpperCase(),
                                 accion:req.url==="/FilterArchivos"?"BUSCAR":"",
                                 metodo:req.method,
                                 date:new Date(),
@@ -123,7 +123,7 @@ const buscar = async (req, res, next) => {
                 carreras.forEach(async carrera => {
                     var object={
                         ip:req.connection.remoteAddress,
-                        navegador:req.headers['user-agent'],
+                        navegador:req.device.type.toUpperCase(),
                         accion:req.url==="/FilterArchivos"?"BUSCAR":"",
                         metodo:req.method,
                         date:new Date(),
@@ -149,7 +149,7 @@ const compartir =async (req, res, next) => {
     var  carrera =  await GetCarrera(req.user.id);
     var object={
         ip:req.connection.remoteAddress,
-        navegador:req.headers['user-agent'],
+        navegador:req.device.type.toUpperCase(),
         accion:req.url==="/archivos"?"SUBIR":"",
         metodo:req.method,
         date:new Date(),
@@ -170,7 +170,7 @@ const Notas = async(req, res, next) => {
     var  carrera =  await GetCarrera(req.user.id);
     var object={
         ip:req.connection.remoteAddress,
-        navegador:req.headers['user-agent'],
+        navegador:req.device.type.toUpperCase(),
         accion:req.url==="/notas"?"NOTAS":'',
         user_carrera_id:carrera?carrera.id:null,
         user_carrera_nombre:carrera?carrera.nombre:null,
