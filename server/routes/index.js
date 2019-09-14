@@ -66,7 +66,7 @@ module.exports=(app) => {
   app.get('/GetTipos',authMiddleware.checkAuth,Denuncia.GetTipos); 
 
   /*Rutas para obtener datos de Archivos*/
-  app.post('/archivos',upload.any(),authMiddleware.checkAuth,logMiddleware.compartir, Archivos.Subir); //LOG COMPARTIR
+  app.post('/archivos',authMiddleware.checkAuth,logMiddleware.compartir, Archivos.Subir2); //LOG COMPARTIR
   app.get('/archivos',authMiddleware.checkAuth, Archivos.GetAll);
   app.get('/misarchivos',authMiddleware.checkAuth, Archivos.misArchivos);
   app.post('/GetArchivo',authMiddleware.checkAuth,logMiddleware.general,Archivos.GetArchivo);

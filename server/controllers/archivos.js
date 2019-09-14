@@ -1,4 +1,5 @@
 const model = require('../models')
+const IncomingForm = require("formidable").IncomingForm;
 
 const { Archivo,Ramo,Usuario,Categoria,Contenido,Carrera,Denuncia} = model;
 var path = require('path')
@@ -41,14 +42,15 @@ async function GetPath(cod_carrera,cod_contenido,cod_categoria,filename,extensio
 
 }
 async function uploadGOOGLE(file,cod_contenido,cod_usuario,cod_categoria,descripcion,correo,token,carpeta_id){
-    var archivo=  sf.createReadStream(file.buffer)
-    var extension= path.extname(file.originalname);
-    var filename = path.basename(file.originalname,extension);
-    var nombre_archivo=filename+ Date.now()+extension;
 
-   return GoogleDrive.DriveUpload(correo,token,nombre_archivo,carpeta_id,archivo,file.mimetype).then(data=>{
+
+    var file= file.file;
+    var extension= path.extname(file.name);
+    var filename = path.basename(file.name,extension);
+    var nombre_archivo=filename+ Date.now()+extension;
+   
+   return GoogleDrive.DriveUpload(correo,token,nombre_archivo,carpeta_id,file.writeStream,file.type).then(data=>{
         
-        // console.log(data.data)
          var archivo = {
             nombre:filename.charAt(0).toUpperCase() + filename.slice(1).toLowerCase(),
             enlace:data.data,//id del archivo
@@ -64,18 +66,16 @@ async function uploadGOOGLE(file,cod_contenido,cod_usuario,cod_categoria,descrip
             size: file.size,
         }
         return Archivo.create(archivo)
-            .then(()=>{return true})
-            .catch(()=>{return false})
-            
-
+            .then((resp)=>{return true})
+            .catch((err)=>{console.log(err);return false})
     });
 }
 async function uploadDROPBOX(file,cod_contenido,cod_usuario,cod_categoria,descripcion,token,cod_carrera){
-    var extension= path.extname(file.originalname);
-    var filename = path.basename(file.originalname,extension);
+    var file= file.file;
+    var extension= path.extname(file.name);
+    var filename = path.basename(file.name,extension);
     var url= await GetPath(cod_carrera,cod_contenido,cod_categoria,filename,extension);
-    console.log(url)
-    return Dropbox.DropboxUpload(token,url,file.buffer).then(data=>{
+    return Dropbox.DropboxUpload(token,url,file.writeStream).then(data=>{
   
         var archivo = {
            nombre:filename.charAt(0).toUpperCase() + filename.slice(1).toLowerCase(),
@@ -103,6 +103,7 @@ async function uploadDROPBOX(file,cod_contenido,cod_usuario,cod_categoria,descri
    });
 }
 async function uploadEnlace(cod_contenido,cod_usuario,cod_categoria,descripcion,enlace){
+ 
     var archivo = {
         nombre:enlace.nombre,
         enlace:enlace.enlace,
@@ -181,6 +182,55 @@ class Archivos {
     
        
     }
+    static Subir2(req, res) {
+      
+        var form = new IncomingForm();
+        form.parse(req, async function (err, fields, files) {
+            var cod_carrera= req.user.cod_carrera;
+            var cod_usuario=req.user.id;
+            const { cod_categoria,descripcion,cod_contenido,isEnlace,enlace} = fields
+           
+            if(isEnlace==='true'){
+                uploadEnlace(cod_contenido,cod_usuario,cod_categoria,descripcion,JSON.parse(enlace))
+                .then(()=>{res.send(true)})
+                .catch(()=>{res.send(false)})   
+
+            }
+            else{  
+               
+                return Carrera.findByPk(cod_carrera)
+                .then(data=>{
+                    var ubicacion = data.ubicacion;
+                    var token = data.token;
+                    var correo=data.correo;
+                    var carpeta_id=data.carpeta_id;
+                  
+                    var file=files
+                   
+                    if(ubicacion==="GOOGLE"){
+        
+                       uploadGOOGLE(file,cod_contenido,cod_usuario,cod_categoria,descripcion,correo,token,carpeta_id)
+                            .then((resp)=>{ 
+                                console.log(resp)
+                                res.send(resp)
+                                
+                            })
+                            
+                    }
+                    if(ubicacion==="DROPBOX"){
+                        console.log("llege2")
+                       uploadDROPBOX(file,cod_contenido,cod_usuario,cod_categoria,descripcion,token,cod_carrera)
+                        .then((resp)=>{ 
+                            console.log(resp)
+                            res.send(resp)
+                            
+                        })
+                    }  
+                });
+            }
+
+        });       
+    }  
  
     static async GetArchivo(req, res) {
         var nombreArchivo= req.body.nombre;
@@ -424,7 +474,9 @@ class Archivos {
                         }
                 },
             order: [
+                ['valoracion', 'DESC'],
                 [model.Categoria, 'nombre', 'asc']
+                
                 ],
             include: [
                 FiltroCRC,
