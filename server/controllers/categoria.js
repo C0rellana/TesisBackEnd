@@ -14,28 +14,26 @@ function clean(obj) {
 class Categorias {
 
     static List(req, res) {
-       return Usuario.findOne({where:{id:req.user.id}}).then(usuario=>{
+        var cod_carrera = req.user.cod_carrera
             return Categoria
             .findAll({
                 attributes: [['id', 'value'], ['nombre', 'label'],'icon','color','descripcion'],
                 order: [
                     ['nombre', 'ASC'],
                 ],
-                include: [{model:Carrera,attributes: [], where:{id:usuario.cod_carrera}}]
+                include: [{model:Carrera,attributes: [], where:{id:cod_carrera}}]
             })
             .then(Categorias => res.status(200).send(Categorias));
-       });
     }
 
     static AgregarCategoria(req, res) {
         var {nombre,descripcion,color,id} = req.body;
-
-        return Usuario.findOne({where:{id:req.user.id}}).then(usuario=>{
+        
             var object={
                 nombre:nombre,
                 descripcion:descripcion,
                 color:color?color:"#000",
-                cod_carrera:usuario.cod_carrera,
+                cod_carrera:req.user.cod_carrera,
             }
             return  Categoria.create(object)
             .then(()=>{
@@ -45,7 +43,7 @@ class Categorias {
                 console.log(error)
                 return res.status(200).send({status: false, message:"No se pudo completar la acción"});  
             })
-        });
+
     }
 
     static EditarCategoria(req, res) {

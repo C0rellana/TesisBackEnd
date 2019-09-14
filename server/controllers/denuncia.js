@@ -6,13 +6,11 @@ class Denuncias {
 
     static List(req, res) {
         var estado=req.body.tipo;
-        console.log(estado)
+        var cod_carrera= req.user.cod_carrera;
       
         Archivo
             .findAll({
-                attributes: ['id','nombre','descripcion'],
-                //where:{estado:true},
-               
+                attributes: ['id','nombre','descripcion'],               
                 include: [
                     {
                         model: Denuncia,
@@ -41,7 +39,7 @@ class Denuncias {
                             {  model: Ramo,
                                 required: true,
                                 attributes: ['id','nombre','cod_carrera'],  
-                                where:{cod_carrera:1},
+                                where:{cod_carrera:cod_carrera},
 
                             }
                         ]        
@@ -88,7 +86,6 @@ class Denuncias {
 
     static IgnorarDenuncia(req,res){
         var id_archivo = req.body.cod_archivo;
-        console.log(id_archivo)
 
         return  Archivo.update({ estado: true}, { where: { id: id_archivo } })
         .then(()=>{

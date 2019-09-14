@@ -21,6 +21,7 @@ const authenticate = params => {
 		const payload = {
 			correo: Usuario.correo,
 			id: Usuario.id,
+			cod_carrera:Usuario.cod_carrera,
 			time: new Date()
 		};
 

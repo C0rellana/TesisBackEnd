@@ -10,21 +10,10 @@ const sf = require('streamifier');
 
 
 
-async function GetPath(cod_usuario,cod_contenido,cod_categoria,filename,extension){
+async function GetPath(cod_carrera,cod_contenido,cod_categoria,filename,extension){
      //obtener el nombre de la carrera
-    const user = await Usuario.findAll({
-        where:{id:cod_usuario},
-        attributes: [],
-        include:[
-            {
-                model: Carrera,
-                required: true,
-                attributes: ['nombre']
-            }, 
-        ]
-    })
-    .map(el => el.get({ plain: true }))
 
+    const carrera = await Carrera.findByPk(cod_carrera);
     //obtener el nombre del ramo y contenido
     const ramo = await Contenido.findAll({
         where:{id:cod_contenido},
@@ -37,15 +26,12 @@ async function GetPath(cod_usuario,cod_contenido,cod_categoria,filename,extensio
             }, 
         ]
     })
-    .map(el => el.get({ plain: true }))
-
     const categoria = await Categoria.findAll({
         where:{id:cod_categoria},
         attributes: ['nombre'],
     })
-    .map(el => el.get({ plain: true }))
-
-    var nombre_carrera=user[0].Carrera.nombre;
+ 
+    var nombre_carrera=carrera.nombre;
     var nombre_ramo= ramo[0].Ramo.nombre;
     var nombre_contenido= ramo[0].nombre;
     var nombre_categoria =categoria[0].nombre;
@@ -84,11 +70,11 @@ async function uploadGOOGLE(file,cod_contenido,cod_usuario,cod_categoria,descrip
 
     });
 }
-async function uploadDROPBOX(file,cod_contenido,cod_usuario,cod_categoria,descripcion,token){
+async function uploadDROPBOX(file,cod_contenido,cod_usuario,cod_categoria,descripcion,token,cod_carrera){
     var extension= path.extname(file.originalname);
     var filename = path.basename(file.originalname,extension);
-    var url= await GetPath(cod_usuario,cod_contenido,cod_categoria,filename,extension);
-
+    var url= await GetPath(cod_carrera,cod_contenido,cod_categoria,filename,extension);
+    console.log(url)
     return Dropbox.DropboxUpload(token,url,file.buffer).then(data=>{
   
         var archivo = {
@@ -105,6 +91,7 @@ async function uploadDROPBOX(file,cod_contenido,cod_usuario,cod_categoria,descri
            isEnlace:false,
            size: file.size,
        }
+       
        return Archivo.create(archivo)
            .then(()=>{
                return true
@@ -116,7 +103,6 @@ async function uploadDROPBOX(file,cod_contenido,cod_usuario,cod_categoria,descri
    });
 }
 async function uploadEnlace(cod_contenido,cod_usuario,cod_categoria,descripcion,enlace){
-    console.log("a")
     var archivo = {
         nombre:enlace.nombre,
         enlace:enlace.enlace,
@@ -147,7 +133,7 @@ function clean(obj) {
 class Archivos {
 
     static async Subir(req, res) {
-
+        var cod_carrera= req.user.cod_carrera;
         const { cod_categoria,descripcion,cod_contenido,enlace} = req.body
         var cod_usuario=req.user.id;
         let responses = [];
@@ -166,18 +152,13 @@ class Archivos {
         }
         else{  
 
-            return Usuario.findOne(
-                {where:{id:cod_usuario},
-                include:[ {
-                    model: Carrera,
-                    required: true,
-                    attributes: ['ubicacion','token','correo','carpeta_id'],
-                }]
-            }).then(async data=>{
-                var ubicacion = data.Carrera.ubicacion;
-                var token = data.Carrera.token;
-                var correo=data.Carrera.correo;
-                var carpeta_id=data.Carrera.carpeta_id;
+            return Carrera.findByPk(cod_carrera)
+            .then(async data=>{
+              
+                var ubicacion = data.ubicacion;
+                var token = data.token;
+                var correo=data.correo;
+                var carpeta_id=data.carpeta_id;
                 for (let i = 0; i < req.files.length; i++) {
                     var file=req.files[i];
                     if(ubicacion==="GOOGLE"){
@@ -186,7 +167,7 @@ class Archivos {
                             .catch(()=>{return false})   
                     }
                     if(ubicacion==="DROPBOX"){
-                        var s= await uploadDROPBOX(file,cod_contenido,cod_usuario,cod_categoria,descripcion,token)
+                        var s= await uploadDROPBOX(file,cod_contenido,cod_usuario,cod_categoria,descripcion,token,cod_carrera)
                             .then(()=>{return true})
                             .catch(()=>{return false})  
                     }
@@ -496,8 +477,7 @@ class Archivos {
           
             return res.status(200).send({status: true, message:"Denuncia enviada"})  
         })
-        .catch((error)=>{     
-            console.log(error)  
+        .catch((error)=>{      
            return res.status(200).send({status: false, message:"Denuncia enviada"}) 
         })     
             

@@ -65,7 +65,6 @@ async function ChangeAvatar(req, res){
 
 async function GetAvatar(req, res){
 	const id = req.user.id;
-	var file= req.file;
 	const user = await Usuarios.findAll({
         where:{id:id},
         attributes: ['rut'],

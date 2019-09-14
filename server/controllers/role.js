@@ -13,12 +13,10 @@ function clean(obj) {
 class Role {
 
     static List(req, res) {
-        var cod_usuario= req.user.id;
+        var cod_carrera= req.user.cod_carrera;
         var role= req.body.role;
-        return Usuario.findByPk(cod_usuario).then(user=>{
-
             return Usuario.findAll({
-                where:{role:role, cod_carrera:user.cod_carrera},
+                where:{role:role, cod_carrera:cod_carrera},
                 attributes: ['id','rut','nombre'],
                 include:[
                     {
@@ -29,7 +27,6 @@ class Role {
             
             })
             .then(usuario=>res.status(200).send(usuario));
-        })
    
         
     }
@@ -37,15 +34,14 @@ class Role {
 
     static Edit(req, res) {
         var {rut,role,carrera} = req.body;
-        var cod_usuario = req.user.id;
+        var cod_carrera= req.user.cod_carrera;
 
         var object={
             role:role,
             cod_carrera:carrera,
         }
         object= clean(object)
-        return Usuario.findByPk(cod_usuario).then(us=>{
-            Usuario.findOne({where:{rut:rut,cod_carrera:us.cod_carrera}}).then(u=>{
+            Usuario.findOne({where:{rut:rut,cod_carrera:cod_carrera}}).then(u=>{
                 if(u){
                 return  Usuario.update(object,{where:{rut:rut}})
                     .then(user=> {
@@ -60,7 +56,6 @@ class Role {
                 
                 }
             })
-        });
                 
          
 

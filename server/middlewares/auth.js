@@ -10,9 +10,11 @@ const checkAuth = (req, res, next) => {
 		if (err)
 			return res.status(401).send({ auth: false, message: 'Error al realizar esta accion. No tiene permisos' });
 
+			
     req.user = {
-			login: decoded.login,
-			id: decoded.id
+			correo: decoded.correo,
+			id: decoded.id,
+			cod_carrera:decoded.cod_carrera,
 		};
     next();
 	});

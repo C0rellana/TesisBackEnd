@@ -15,7 +15,9 @@ class Carreras {
           Carrera
         }))
         .catch(error => res.status(400).send(error));
-    }
+  
+  }
+
   static List(req, res) {
    // console.log(req.user.id)
     return Carrera
@@ -59,25 +61,22 @@ class Carreras {
   }
 
   static CarreraToken(req, res) {
-    var user_id=req.user.id;
+    var cod_carrera=req.user.cod_carrera;
     const token = req.body.token
-    console.log(token)
-    return Usuario.findOne({where:{id:user_id}}).then(usuario=>{
+    
       return Carrera
         .update(
           {token:token},
-          {where:{id:usuario.cod_carrera}}
+          {where:{id:cod_carrera}}
         )
         .then(() => res.status(201).send({
           success: true,
           message: 'Se ha modificado correctamente',
         }))
         .catch(error => {
-          console.log(error)
           res.status(400).send(error)
         });
 
-    })
   }
 
 }

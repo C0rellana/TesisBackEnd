@@ -52,7 +52,6 @@ class Contenidos {
      }
      static DeleteContenido(req, res) {
         var {id} = req.body;
-        console.log(id)
         return Contenido
             .destroy({ where: { id: id } })
             .then(Contenido => res.status(200).send({status: true,data:Contenido, message:"Contenido eliminado"}))
