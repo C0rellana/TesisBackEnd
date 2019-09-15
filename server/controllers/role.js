@@ -11,12 +11,29 @@ function clean(obj) {
 }
 
 class Role {
-
+    
     static List(req, res) {
         var cod_carrera= req.user.cod_carrera;
         var role= req.body.role;
             return Usuario.findAll({
                 where:{role:role, cod_carrera:cod_carrera},
+                attributes: ['id','rut','nombre'],
+                include:[
+                    {
+                      model:Carrera,
+                      attributes: [['id','value'],['nombre','label']],
+                    }
+                ]     
+            
+            })
+            .then(usuario=>res.status(200).send(usuario));
+   
+        
+    }
+    static ListDirectores(req, res) {
+
+            return Usuario.findAll({
+                where:{role:"DIRECTOR"},
                 attributes: ['id','rut','nombre'],
                 include:[
                     {

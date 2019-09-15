@@ -36,6 +36,9 @@ module.exports = {
         type:   Sequelize.ENUM,
         values: ['GOOGLE', 'DROPBOX'] 
       },
+      size: {
+        type:  Sequelize.INTEGER
+      },
       cod_usuario: {
         type: Sequelize.INTEGER,
         onDelete: 'CASCADE',

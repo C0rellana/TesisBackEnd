@@ -13,7 +13,7 @@ var multer  = require('multer')
 var upload = multer();
 const authMiddleware = require('../middlewares/auth');
 const logMiddleware = require('../middlewares/log');
-
+const dashboard = require("../controllers/Dashboard")
 module.exports=(app) => {
 
   app.post('/notas',authMiddleware.checkAuth,logMiddleware.Notas, Notas.List);
@@ -33,6 +33,7 @@ module.exports=(app) => {
 
   /*Rutas para obtener datos de carreras*/
   app.get('/carreras',Carrera.List); 
+  app.get('/carreraIsEnabled',authMiddleware.checkAuth,Carrera.IsEnabled); 
   app.get('/ApiGetCarrera',authMiddleware.checkAuth,Carrera.ApiGetCarrera); 
   app.get('/carrerasramos',authMiddleware.checkAuth,Carrera.CarreraRamos); 
   app.post('/CarreraToken',authMiddleware.checkAuth,Carrera.CarreraToken); 
@@ -78,6 +79,7 @@ module.exports=(app) => {
   /*Rutas para obtener datos de roles*/
 
   app.post('/roles',authMiddleware.checkAuth,Role.List); 
+  app.get('/roleDirector',authMiddleware.checkAuth,Role.ListDirectores); 
   app.post('/editRole',authMiddleware.checkAuth,Role.Edit); 
 
   /*Cambiar logo ADMIN*/

@@ -79,6 +79,23 @@ class Carreras {
 
   }
 
+  //verifica el token.
+  static IsEnabled(req, res){
+    var cod_carrera=req.user.cod_carrera;
+    return  Carrera.findByPk(cod_carrera)
+      .then(carrera=>{
+      
+        if(carrera.token){
+          return res.send(true)
+        }
+        else{
+         return  res.send(false)
+        }
+      })
+
+    res.send(false)
+
+  }
 }
 
 module.exports = Carreras
