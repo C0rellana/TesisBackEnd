@@ -30,6 +30,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     color: {
       type: DataTypes.STRING,
+      defaultValue: "#001740"
     },
     img: {
       type: DataTypes.STRING,
