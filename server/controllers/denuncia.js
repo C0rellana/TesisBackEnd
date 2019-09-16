@@ -21,9 +21,15 @@ class Denuncias {
                             {
                                 model: Tipodenuncia,
                                 required: true,
-                                attributes: ['nombre'],
+                                attributes: ['nombre'],                                
+                            },
+                            {
+                                model: Usuario,
+                                required: true,
+                                attributes: ['nombre','rut'],
                                 
-                            }] 
+                            },
+                        ] 
                     },
                     {
                         model: Usuario,
