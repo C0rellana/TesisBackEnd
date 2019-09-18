@@ -1,5 +1,6 @@
 const model = require('../models')
 const { Categoria,Usuario,Carrera} = model;
+const Op = require('sequelize').Op;
 
 function clean(obj) {
     for (var atr in obj) { 
@@ -13,17 +14,35 @@ function clean(obj) {
 
 class Categorias {
 
-    static List(req, res) {
+    static ListAll(req, res) {
         var cod_carrera = req.user.cod_carrera
             return Categoria
             .findAll({
                 attributes: [['id', 'value'], ['nombre', 'label'],'icon','color','descripcion'],
+                where:{
+                    [Op.or]: [{id:[1,2,3,4,5,6,7]}, {cod_carrera: cod_carrera}]
+                    },
+                  
                 order: [
                     ['nombre', 'ASC'],
-                ],
-                include: [{model:Carrera,attributes: [], where:{id:cod_carrera}}]
+                ]
             })
-            .then(Categorias => res.status(200).send(Categorias));
+            .then(Categorias =>{res.status(200).send(Categorias)} );
+    }
+    static ListForCarrera(req, res) {
+        var cod_carrera = req.user.cod_carrera
+            return Categoria
+            .findAll({
+                attributes: [['id', 'value'], ['nombre', 'label'],'icon','color','descripcion'],
+                where:{
+                   cod_carrera: cod_carrera
+                    },
+                  
+                order: [
+                    ['nombre', 'ASC'],
+                ]
+            })
+            .then(Categorias =>{res.status(200).send(Categorias)} );
     }
 
     static AgregarCategoria(req, res) {

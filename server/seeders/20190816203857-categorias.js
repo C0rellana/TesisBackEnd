@@ -5,7 +5,7 @@ module.exports = {
     await queryInterface.bulkInsert('Categoria', [
       {
         nombre: 'LIBROS',
-        cod_carrera:1,
+        
         descripcion: 'Sección para almacenar lirbos que ayuden a otros compañeros',
         createdAt : new Date(),
         updatedAt : new Date(),
@@ -14,7 +14,7 @@ module.exports = {
       },
       {
         nombre: 'GUIAS',
-        cod_carrera:1,
+        // cod_carrera:1,
         descripcion: 'Sección para almacenar guias que ayuden a otros compañeros',
         createdAt : new Date(),
         updatedAt : new Date(),
@@ -23,7 +23,7 @@ module.exports = {
       },
       {
         nombre: 'TRABAJOS',
-        cod_carrera:1,
+        // cod_carrera:1,
         descripcion: 'Sección para almacenar trabajos que ayuden a otros compañeros',
         createdAt : new Date(),
         updatedAt : new Date(),
@@ -32,7 +32,7 @@ module.exports = {
       },
       {
         nombre: 'PRUEBAS',
-        cod_carrera:1,
+        // cod_carrera:1,
         descripcion: 'Sección para almacenar pruebas que ayuden a otros compañeros',
         createdAt : new Date(),
         updatedAt : new Date(),
@@ -41,7 +41,7 @@ module.exports = {
       },
       {
         nombre: 'VIDEOS',
-        cod_carrera:1,
+        // cod_carrera:1,
         descripcion: 'Sección para almacenar videos que ayuden a otros compañeros',
         createdAt : new Date(),
         updatedAt : new Date(),
@@ -50,7 +50,7 @@ module.exports = {
       },
       {
         nombre: 'TALLERES',
-        cod_carrera:1,
+        // cod_carrera:1,
         descripcion: 'Sección para almacenar material relacionado con talleres realizados en el ramo que ayuden a otros compañeros',
         createdAt : new Date(),
         updatedAt : new Date(),
@@ -59,7 +59,7 @@ module.exports = {
       },
       {
         nombre: 'CONTROLES',
-        cod_carrera:1,
+        // cod_carrera:1,
         descripcion: 'Sección para almacenar controles que ayuden a otros compañeros',
         createdAt : new Date(),
         updatedAt : new Date(),

@@ -50,7 +50,7 @@ async function uploadGOOGLE(file,cod_contenido,cod_usuario,cod_categoria,descrip
     var nombre_archivo=filename+ Date.now()+extension;
    
    return GoogleDrive.DriveUpload(correo,token,nombre_archivo,carpeta_id,file.writeStream,file.type).then(data=>{
-        
+       
          var archivo = {
             nombre:filename.charAt(0).toUpperCase() + filename.slice(1).toLowerCase(),
             enlace:data.data,//id del archivo
@@ -67,7 +67,7 @@ async function uploadGOOGLE(file,cod_contenido,cod_usuario,cod_categoria,descrip
         }
         return Archivo.create(archivo)
             .then((resp)=>{return true})
-            .catch((err)=>{console.log(err);return false})
+            .catch((err)=>{return false})
     });
 }
 async function uploadDROPBOX(file,cod_contenido,cod_usuario,cod_categoria,descripcion,token,cod_carrera){
@@ -184,6 +184,7 @@ class Archivos {
     }
     static Subir2(req, res) {
       
+      
         var form = new IncomingForm();
         form.parse(req, async function (err, fields, files) {
             var cod_carrera= req.user.cod_carrera;
@@ -211,19 +212,19 @@ class Archivos {
         
                        uploadGOOGLE(file,cod_contenido,cod_usuario,cod_categoria,descripcion,correo,token,carpeta_id)
                             .then((resp)=>{ 
-                                console.log(resp)
                                 res.send(resp)
                                 
+                            }).catch(()=>{
+                                res.send(false)  
                             })
                             
                     }
                     if(ubicacion==="DROPBOX"){
-                        console.log("llege2")
                        uploadDROPBOX(file,cod_contenido,cod_usuario,cod_categoria,descripcion,token,cod_carrera)
                         .then((resp)=>{ 
-                            console.log(resp)
                             res.send(resp)
-                            
+                        }).catch(()=>{
+                            res.send(false)  
                         })
                     }  
                 });
@@ -368,7 +369,6 @@ class Archivos {
 
     static async FilterArchivos(req, res) {
         const {carreras,ramos,contenidos,busqueda} = req.body;
-      
 
        var FiltroCRC= {};
         if(carreras.length>0){

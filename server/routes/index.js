@@ -54,7 +54,8 @@ module.exports=(app) => {
   app.post('/deleteContenido',authMiddleware.checkAuth,Contenido.DeleteContenido); 
 
    /*Rutas para obtener datos de categorias*/
-  app.get('/categorias',authMiddleware.checkAuth,Categoria.List); 
+  app.get('/categorias',authMiddleware.checkAuth,Categoria.ListAll); 
+  app.get('/miscategorias',authMiddleware.checkAuth,Categoria.ListForCarrera); 
   app.post('/agregarcategoria',authMiddleware.checkAuth,Categoria.AgregarCategoria); 
   app.post('/editarcategoria',authMiddleware.checkAuth,Categoria.EditarCategoria); 
   app.post('/eliminarcategoria',authMiddleware.checkAuth,Categoria.EliminarCategoria); 
