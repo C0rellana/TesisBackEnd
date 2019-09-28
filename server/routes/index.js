@@ -21,7 +21,10 @@ module.exports=(app) => {
   /*Rutas para obtener datos del usuario*/
   app.post('/login',logMiddleware.general, authController.login); //LOGIN
   app.post('/register',logMiddleware.general,authController.register);
+  app.post('/restablecer',logMiddleware.general,authController.restablecer);
+  app.post('/CambiarContrasena',logMiddleware.general,authController.CambiarContrasena);
   
+
   app.get('/GetData',authMiddleware.checkAuth,authController.GetData); 
   app.post('/ChangeColor',authMiddleware.checkAuth,logMiddleware.general,authController.ChangeColor); 
 

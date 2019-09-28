@@ -32,6 +32,12 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       defaultValue: "#001740"
     },
+    resetPasswordToken:{
+      type: DataTypes.STRING,
+    },
+    resetPasswordExpires:{
+      type: DataTypes.DATE,
+    },
     img: {
       type: DataTypes.STRING,
     },

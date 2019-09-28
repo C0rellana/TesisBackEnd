@@ -6,7 +6,8 @@ const resp = require('./response');
 const Op = require('sequelize').Op;
 const addUser = user => Usuarios.create(user);
 const fs = require('fs');
-
+var crypto = require('crypto');
+var nodemailer = require('nodemailer');
 function login(req, res){
 	return authService.authenticate(req.body)
 	.then(data => {
@@ -18,6 +19,72 @@ function login(req, res){
 		}
 		return resp.Error(res,'Oops... Error desconocido.')
 	})
+};
+
+
+function restablecer(req, res){
+
+	Usuarios.findOne({where:{correo:req.body.correo}}).then(user=>{
+		if(user){
+			crypto.randomBytes(20, function(err, buf) {
+				var token = buf.toString('hex');
+			
+				user.update({resetPasswordToken: token,resetPasswordExpires:Date.now()+ 3600000},
+			  		).then(data=>{
+						var transporter = nodemailer.createTransport({
+							service: 'SendGrid',
+							auth: {
+							user: 'carloxmof1',
+							pass: 'Carlos19951995'
+							}
+						});
+						var mailOptions = {
+							to: data.correo,
+							from: 'PasswordReset@comparteUCM.cl',
+							subject: 'Password Reset',
+							text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
+							'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
+							req.headers.origin + '/reset/' + token + '\n\n' +
+							'If you did not request this, please ignore this email and your password will remain unchanged.\n'
+						};
+						transporter.sendMail(mailOptions, function(err) {
+							return resp.Success(res,'Revise su correo para continuar'); 
+						});	
+
+					}).catch((e)=>{
+						return resp.Error(res,'Error al realizar la accion'); 
+					})				
+		});
+		
+	}else{
+		return resp.Error(res,'El correo ingresado no exite'); 
+	}
+
+
+	});
+};
+
+function CambiarContrasena(req, res){
+
+	var token= req.body.token.substring(7);
+	Usuarios.findOne(
+		{where:{ 
+			resetPasswordToken: token, 
+			resetPasswordExpires: { [Op.gt]: Date.now() } 
+		}}
+		).then(user=>{
+		if(user){
+			user.update({password: bcrypt.hashSync(req.body.password, config.saltRounds)},
+				).then(()=>{
+					return resp.Success(res,'Contraseña cambiada con exito!'); 
+				}).catch((e)=>{
+					return resp.Error(res,'Error al cambiar la contraseña'); 
+				})				
+		}else{
+			return resp.Error(res,'Error, este enlace ya expiró'); 
+		}
+
+	});
 };
 
 function GetData(req, res){
@@ -111,7 +178,7 @@ function register(req, res){
 		.catch(() => resp.Error(res,"Oops... Revise los datos otorgados"));
 
 	})
-	.catch((e) =>console.log(e));
+	.catch((e) =>{});
 	
 };
 
@@ -123,5 +190,7 @@ module.exports = {
 	ChangeColor,
 	changePreferencias,
 	ChangeAvatar,
-	GetAvatar
+	GetAvatar,
+	restablecer,
+	CambiarContrasena
 }
