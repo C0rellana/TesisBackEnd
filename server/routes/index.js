@@ -90,5 +90,9 @@ module.exports=(app) => {
   app.post('/Logo',upload.single('file'),authMiddleware.checkAuth,admin.ChangeLogo); 
   app.get('/Logo',authMiddleware.checkAuth,admin.GetLogo); 
 
+  app.get('/getMensaje',admin.getMensaje); 
+  app.post('/setMensaje',authMiddleware.checkAuth,admin.changeMensaje); 
+
+
 };
 

@@ -1,5 +1,7 @@
 const resp = require('./response');
 const fs = require('fs');
+const model = require('../models')
+const { Admin} = model;
 
 
 async function ChangeLogo(req, res){
@@ -29,10 +31,40 @@ async function GetLogo(req, res){
 
 };
 
+function getMensaje(req,res){
+    Admin.findAll({
+        limit: 1,
+        where: {
+            estado:true
+          //your where conditions, or without them if you need ANY entry
+        },
+        order: [ [ 'createdAt', 'DESC' ]]
+      }).then((data)=>{
+        res.send(data)
+      }); 
+}
+
+function changeMensaje(req,res){
+    var {mensaje,tipo,estado}=req.body;
+    if(estado){
+        Admin.create({mensaje,estado,tipo}).then(data=>{
+            res.send(data)
+        })
+    }
+    else{
+        Admin.update({estado},{ where: { estado: true }}).then(data=>{
+            res.send(data)
+        })
+    }
+   
+}
 
 
 module.exports = {
 
 	ChangeLogo,
-	GetLogo
+    GetLogo,
+    changeMensaje,
+    getMensaje
+
 }

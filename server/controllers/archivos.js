@@ -76,6 +76,7 @@ async function uploadDROPBOX(file,cod_contenido,cod_usuario,cod_categoria,descri
     var buffer = fs.readFileSync(file.path);
 
     return Dropbox.DropboxUpload(token,url,buffer).then(data=>{
+        console.log(data)
      
         var archivo = {
            nombre:filename.charAt(0).toUpperCase() + filename.slice(1).toLowerCase(),
