@@ -60,7 +60,7 @@ async function uploadGOOGLE(file,cod_contenido,cod_usuario,cod_categoria,descrip
             valoracion:0.0,
             cod_categoria,
             descripcion,
-            status: true,
+            estado: true,
             isEnlace:false,
             size: file.size,
         }
@@ -87,7 +87,7 @@ async function uploadDROPBOX(file,cod_contenido,cod_usuario,cod_categoria,descri
            valoracion:0.0,
            cod_categoria,
            descripcion,
-           status: true,
+           estado: true,
            isEnlace:false,
            size: file.size,
        }
