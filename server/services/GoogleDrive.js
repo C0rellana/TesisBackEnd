@@ -5,6 +5,7 @@ const drive = google.drive('v3');
 
 
 function GetToken(correo,token){
+
   return new google.auth.JWT(
     correo,
     null,
@@ -19,17 +20,17 @@ function DriveList(correo,token){
     const jwtClient= GetToken(correo,token);
 
     drive.files.list({ auth:jwtClient}).then(list=> {
-      console.log(list.data.files)
+      // console.log(list.data.files)
     }).catch(err=> {
-      console.log(err)
+      // console.log(err)
     });
 
 }
 
 async function DriveUpload(correo,token,nombre_archivo,carpeta_id,archivo,mimeType){
-   
-    const jwtClient= GetToken(correo,token);
 
+  const jwtClient= GetToken(correo,token);
+    
     const fileMetadata = {
       name: nombre_archivo, //Nombre del archivo
       parents:[carpeta_id] //carpeta compartida.
@@ -39,7 +40,7 @@ async function DriveUpload(correo,token,nombre_archivo,carpeta_id,archivo,mimeTy
       mimeType: mimeType, //Aceptar cualquier tipo
       body: archivo, //archivo de entrada
     };
-
+   
     try {
       const file = await drive.files.create({
         auth: jwtClient,
@@ -47,6 +48,7 @@ async function DriveUpload(correo,token,nombre_archivo,carpeta_id,archivo,mimeTy
         media,
         fields: 'id'
       });
+    
       try {
         await drive.permissions.create({
           fileId: file.data.id,
@@ -56,18 +58,18 @@ async function DriveUpload(correo,token,nombre_archivo,carpeta_id,archivo,mimeTy
             type: 'anyone',
           }
         });
-        //console.log("Permisos para cualquier usuario concedido")
-        //console.log("id:",file.data.id)
+        // console.log("Permisos para cualquier usuario concedido")
+        // console.log("id:",file.data.id)
         return {success:true,data:file.data.id, message:"Permisos para cualquier usuario concedido"};
       }
       catch (err) {
-        //console.log("Permisos para cualquier usuario denegado")
+        // console.log("Permisos para cualquier usuario denegado")
         return {success:false,data:err,message:"Permisos para cualquier usuario denegado"};
         
       }
     }
     catch (err_1) {
-      //console.log("Error al subir el archivo",err)
+      // console.log("Error al subir el archivo",err)
       return {success:false,data:err_1,message:"Error al subir el archivo"};
   
     }
@@ -88,7 +90,7 @@ function DriveNewFolder(correo,token,nombre_carpeta){
       fields: 'id',
       auth:jwtClient,
     }).then(carpeta=>{
-        console.log('Carpeta creada con Id: ', carpeta.data.id);
+        // console.log('Carpeta creada con Id: ', carpeta.data.id);
         var userPermission = {
           'type': 'user',
           'role': 'writer',
@@ -100,17 +102,17 @@ function DriveNewFolder(correo,token,nombre_carpeta){
           fields: 'id',
           auth: jwtClient
         }).then(res=>{
-          console.log('Permission creado: ' + res.id + ' al elemento con id: ' + file.id);
+          // console.log('Permission creado: ' + res.id + ' al elemento con id: ' + file.id);
         }).catch(err=>{
-          console.error('Error asignado permisos a la  carpeta: ' + err);
+          // console.error('Error asignado permisos a la  carpeta: ' + err);
         });
     }).catch(err=>{
-      console.error('Error creando carpeta: ' + err);
+      // console.error('Error creando carpeta: ' + err);
     });
 }
 
 async function GetFile(correo,token,id) {
-    //obtener token de seguridad
+
     const jwtClient= GetToken(correo,token);
     //obtener link del archivo.
     try {

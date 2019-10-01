@@ -8,7 +8,7 @@ const GoogleDrive = require('../services/GoogleDrive');
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 const sf = require('streamifier');
-
+var fs = require('fs');
 
 
 async function GetPath(cod_carrera,cod_contenido,cod_categoria,filename,extension){
@@ -42,15 +42,14 @@ async function GetPath(cod_carrera,cod_contenido,cod_categoria,filename,extensio
 
 }
 async function uploadGOOGLE(file,cod_contenido,cod_usuario,cod_categoria,descripcion,correo,token,carpeta_id){
-
-
-    var file= file.file;
+  
     var extension= path.extname(file.name);
     var filename = path.basename(file.name,extension);
     var nombre_archivo=filename+ Date.now()+extension;
+    var buffer = fs.readFileSync(file.path);
+    var new_archivo= sf.createReadStream(buffer);
    
-   return GoogleDrive.DriveUpload(correo,token,nombre_archivo,carpeta_id,file.writeStream,file.type).then(data=>{
-       
+   return GoogleDrive.DriveUpload(correo,token,nombre_archivo,carpeta_id,new_archivo,file.type).then(data=>{
          var archivo = {
             nombre:filename.charAt(0).toUpperCase() + filename.slice(1).toLowerCase(),
             enlace:data.data,//id del archivo
@@ -71,12 +70,13 @@ async function uploadGOOGLE(file,cod_contenido,cod_usuario,cod_categoria,descrip
     });
 }
 async function uploadDROPBOX(file,cod_contenido,cod_usuario,cod_categoria,descripcion,token,cod_carrera){
-    var file= file.file;
     var extension= path.extname(file.name);
     var filename = path.basename(file.name,extension);
     var url= await GetPath(cod_carrera,cod_contenido,cod_categoria,filename,extension);
-    return Dropbox.DropboxUpload(token,url,file.writeStream).then(data=>{
-  
+    var buffer = fs.readFileSync(file.path);
+
+    return Dropbox.DropboxUpload(token,url,buffer).then(data=>{
+     
         var archivo = {
            nombre:filename.charAt(0).toUpperCase() + filename.slice(1).toLowerCase(),
            enlace:url,//id del archivo
@@ -183,9 +183,11 @@ class Archivos {
        
     }
     static Subir2(req, res) {
-      
-      
         var form = new IncomingForm();
+
+      
+      
+       
         form.parse(req, async function (err, fields, files) {
             var cod_carrera= req.user.cod_carrera;
             var cod_usuario=req.user.id;
@@ -198,15 +200,14 @@ class Archivos {
 
             }
             else{  
-               
+         
                 return Carrera.findByPk(cod_carrera)
                 .then(data=>{
                     var ubicacion = data.ubicacion;
                     var token = data.token;
                     var correo=data.correo;
-                    var carpeta_id=data.carpeta_id;
-                  
-                    var file=files
+                    var carpeta_id=data.carpeta_id;     
+                    var file=files.file
                    
                     if(ubicacion==="GOOGLE"){
         
@@ -258,7 +259,8 @@ class Archivos {
                     
                         await  GoogleDrive.GetFile(correo,token,nombreArchivo).then(data=>{
                             res.send({url:data.data.webContentLink,success:true});  
-                        }).catch(()=>{
+                        }).catch((e)=>{
+                           
                             res.send({message:"Contenido no encontrado",success:false});  
                         });
                     }

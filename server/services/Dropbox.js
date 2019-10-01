@@ -18,9 +18,11 @@ async function DropboxUpload(TOKEN,nombre,file){
     var dbx = new Dropbox({ accessToken: TOKEN, fetch: fetch });    
     try {
         const response = await dbx.filesUpload({ path: '/' + nombre, contents: file });
+        // console.log(response)
         return {success:true, message:"Archivo guardado"};
     }
     catch (error) {
+        // console.log(error)
         return {success:false, message:"No se ha guardado el archivo"};
     }
 }
