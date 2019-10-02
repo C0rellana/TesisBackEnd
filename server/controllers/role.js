@@ -52,13 +52,14 @@ class Role {
     static Edit(req, res) {
         var {rut,role,carrera} = req.body;
         var cod_carrera= req.user.cod_carrera;
-
+        if(!carrera){carrera=cod_carrera}
+        
         var object={
             role:role,
             cod_carrera:carrera,
         }
         object= clean(object)
-            Usuario.findOne({where:{rut:rut,cod_carrera:cod_carrera}}).then(u=>{
+            Usuario.findOne({where:{rut:rut,cod_carrera:carrera}}).then(u=>{
                 if(u){
                 return  Usuario.update(object,{where:{rut:rut}})
                     .then(user=> {
