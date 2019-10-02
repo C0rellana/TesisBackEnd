@@ -21,7 +21,11 @@ class Carreras {
   static List(req, res) {
    // console.log(req.user.id)
     return Carrera
-      .findAll()
+      .findAll({
+        order: [
+          ['nombre', 'ASC']                  
+          ],
+      })
       .then(Carrera => res.status(200).send(Carrera));
   }
 
@@ -44,10 +48,14 @@ class Carreras {
     return Carrera
       .findAll({
         attributes: [['id', 'value'], ['nombre', 'label'],'sigla'],
+        order: [
+          ['nombre', 'ASC'],
+          [model.Ramo, 'nombre', 'asc'],              
+          ],
         include: [{
           model: Ramo,
           required: false,
-          attributes: [['id', 'value'], ['nombre', 'label'],'codigo'],
+          attributes: [['id', 'value'], ['nombre', 'label'],'codigo'],  
           include: [{
             model: Contenido,
             required: false,
@@ -57,7 +65,6 @@ class Carreras {
       })
       .then(
         data => res.status(200).send(data));
-
   }
 
   static CarreraToken(req, res) {

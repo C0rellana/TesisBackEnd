@@ -18,6 +18,9 @@ class Ramos {
             .findAll({
                 attributes: ['id','nombre','codigo'],
                 where: {cod_carrera:cod_carrera},
+                order: [
+                    ['nombre', 'ASC']                  
+                    ],
                 include: [
                     {
                         model: Contenido,
@@ -75,11 +78,15 @@ class Ramos {
             .findAll({
                 attributes: [['id', 'value'], ['nombre', 'label'],'codigo'],
                 where: {cod_carrera:cod_carrera},
+                order: [
+                    ['nombre', 'ASC']                  
+                    ],
                 include: [
                     {
                         model: Contenido,
                         required: false,
                         attributes: [['id', 'value'], ['nombre', 'label'],'unidad'],
+                        
                     }]
             })
             .then(Ramos => res.status(200).send(Ramos));
