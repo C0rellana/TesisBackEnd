@@ -495,7 +495,7 @@ class Archivos {
                 }
                
           ],
-          limit: 100,
+          limit: 200,
         })
         .then(
           data => {
