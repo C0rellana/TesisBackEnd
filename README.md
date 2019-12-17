@@ -20,8 +20,8 @@ $ npm start
 Configurar archivo .env con los siguientes campos:.
 
 ```sh
-API_HOST = "localhost"
-API_PORT = "4000"
+API_HOST = "IP del servidor"
+API_PORT = "Puerto"
 DB_USERNAME = "Nombre de la base de datos"
 DB_PASSWORD = "Password de la base de datos"
 DB_DATABASE = "Nombre de la base de datos"
