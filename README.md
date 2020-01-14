@@ -41,12 +41,12 @@ $ ctrl + D
 5-Crear y configurar archivo .env con los siguientes campos:
 
 ```sh
-API_HOST = "IP del servidor"
-API_PORT = "Puerto"
-DB_USERNAME = "Nombre del usuario"
-DB_PASSWORD = "Password del usuario"
-DB_DATABASE = "Nombre de la base de datos"
-DB_HOST ="Conexion a la base de datos"
+API_HOST = "IP del servidor" 
+API_PORT = "Puerto" 
+DB_USERNAME = "Nombre del usuario" (postgres)
+DB_PASSWORD = "Password del usuario" (password ingresada en el paso 4)
+DB_DATABASE = "Nombre de la base de datos"(BackEnd)
+DB_HOST ="Conexion a la base de datos" (local=127.0.0.1)
 ```
 6-Migrar y subir semillas a la base de datos.
 ```sh
