@@ -8,22 +8,52 @@
 
 ### Installation
 
-Requiere tener instalado [Node.js](https://nodejs.org/).
+1-Instalar NodeJs [Node.js](https://nodejs.org/).
 
-Instalar las dependencias e iniciar aplicacion.
+```sh
+$ apt-get update
+$ sudo apt install nodejs
+$ sudo apt install npm
+```
+2-Clonar repositorio.
+```sh
+$ git clone https://github.com/Carloxmof1/BackEnd.git
+```
+3-Instalar las dependencias.
 
 ```sh
 $ cd BackEnd
 $ npm install
-$ npm start
+$ npm install -g sequelize-cli
 ```
-Configurar archivo .env con los siguientes campos:.
+
+4-Instalar y configurar PostgreSQL (En caso de que la BD este alojada en otro servidor, omitir este paso).
+
+```sh
+$ sudo apt-get install postgresql postgresql-contrib
+$ sudo -u postgres createdb BackEnd
+$ sudo -u postgres psql postgres 
+-> Ingresar password
+$ ctrl + D
+
+
+```
+5-Crear y configurar archivo .env con los siguientes campos:
 
 ```sh
 API_HOST = "IP del servidor"
 API_PORT = "Puerto"
-DB_USERNAME = "Nombre de la base de datos"
-DB_PASSWORD = "Password de la base de datos"
+DB_USERNAME = "Nombre del usuario"
+DB_PASSWORD = "Password del usuario"
 DB_DATABASE = "Nombre de la base de datos"
 DB_HOST ="Conexion a la base de datos"
+```
+6-Migrar semillas a la base de datos.
+```sh
+$ sequelize db:migrate
+```
+
+7-Iniciar Aplicacion.
+```sh
+$ npm start
 ```
