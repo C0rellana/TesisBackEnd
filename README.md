@@ -48,9 +48,10 @@ DB_PASSWORD = "Password del usuario"
 DB_DATABASE = "Nombre de la base de datos"
 DB_HOST ="Conexion a la base de datos"
 ```
-6-Migrar semillas a la base de datos.
+6-Migrar y subir semillas a la base de datos.
 ```sh
 $ sequelize db:migrate
+$ sequelize seed:all
 ```
 
 7-Iniciar Aplicacion.
